@@ -1,0 +1,28 @@
+.homeContainer {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100dvh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    background: linear-gradient(40deg,#6495ED 10%, #4876FF);
+}
+.homeContainer h1{
+    font-size: 2.5em;
+    margin-bottom: .5em;
+    color: #04060b;
+}
+
+.homeContainer h1 span{  
+    color: #6495ED;
+    padding: 0 .2em;
+    background-color: #222;
+}
+
+.homeContainer img{
+    display: flex;
+    width:420px;
+    height: 420px;
+} 
