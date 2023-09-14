@@ -1,95 +1,170 @@
 import Button from 'react-bootstrap/Button';
+import ClienteDelete from './ClienteDelete'
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import '../layout/sectionLayout.css';
-import {IoPencilOutline, IoTrashOutline} from 'react-icons/io5';
+import { IoPencilOutline, IoTrashOutline } from 'react-icons/io5';
 
-function DisplayClientes(){
-    return (       
-        <section responsive className='main_section -exib'>
-            <h1>Clientes</h1>
+function DisplayClientes() {
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [clientes, setClientes] = useState([]);
 
-            <Table striped responsive="sm">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>CPF/CNPJ</th>
-                        <th>RG</th>
-                        <th>N° Telefone</th>
-                        <th>Cidade</th>
-                        <th>UF</th>
-                        <th>Bairro</th>
-                        <th>Logradouro</th>
-                        <th>Numero</th>
-                        <th></th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Saul Basso Junior</td>
-                        <td>111520020-20</td>
-                        <td>123123214</td>
-                        <td>42999447690</td>
-                        <td>Pirai do Sul</td>
-                        <td>PR</td>
-                        <td>Campo do Aterrado</td>
-                        <td>Sitio São Miguel</td>
-                        <td>sn</td>
-                        <td>
-                            <Button inline variant="primary" type="submit">
-                                <IoPencilOutline/>
-                            </Button>
+    const [q, setQ] = useState("");
+    const [searchParam] = useState(["nome", "cpf", "id"]);
+    const [filterParam, setFilterParam] = useState(["All"]);
 
-                            <Button inline variant="danger" type="submit">
-                                <IoTrashOutline/>
-                            </Button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Saul Basso Junior</td>
-                        <td>111520020-20</td>
-                        <td>123123214</td>
-                        <td>42999447690</td>
-                        <td>Pirai do Sul</td>
-                        <td>PR</td>
-                        <td>Campo do Aterrado</td>
-                        <td>Sitio São Miguel</td>
-                        <td>sn</td>
-                        <td>
-                            <Button inline variant="primary" type="submit">
-                                <IoPencilOutline/>
-                            </Button>
+    // axios.get('')
+    //     .then(response =>{
 
-                            <Button inline variant="danger" type="submit">
-                                <IoTrashOutline/>
-                            </Button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Saul Basso Junior</td>
-                        <td>111520020-20</td>
-                        <td>123123214</td>
-                        <td>42999447690</td>
-                        <td>Pirai do Sul</td>
-                        <td>PR</td>
-                        <td>Campo do Aterrado</td>
-                        <td>Sitio São Miguel</td>
-                        <td>sn</td>
-                        <td>
-                            <Button inline variant="primary" type="submit">
-                                <IoPencilOutline/>
-                            </Button>
+    //     }, error => {
+    //         console.log(error);
+    //     });
 
-                            <Button inline variant="danger" type="submit">
-                                <IoTrashOutline/>
-                            </Button>
-                        </td>
-                    </tr>
-                </tbody>
-            </Table>
-            
-        </section>
-    )
+    const getClientes = async () => {
+        try {
+            const response = await axios.get('https://localhost:7029/SCGPD/Cliente');
+            const data = response.data;
+            setClientes(data);
+            setIsLoaded(true);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getClientes();
+    }, []);
+
+    const data = Object.values(clientes);
+
+    function search(clientes) {
+        return clientes.filter((cliente) => {
+            if (filterParam == "All") {
+                return searchParam.some((newCliente) => {
+                    return (
+                        cliente[newCliente]
+                            .toString()
+                            .toLowerCase()
+                            .indexOf(q.toLowerCase()) > -1
+                    );
+                });
+            }
+        });
+    }
+
+    const removeCliente = async (id) => {
+        try {
+            const response = await axios.delete(`https://localhost:7029/SCGPD/Cliente/${id}`);
+            const data = response.data;
+            setClientes(clientes.filter((data) => data.id !== id));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+        return <div>Loading...</div>;
+    } else {
+        return (
+            <section className='main_section -exib'>
+                <h1>Lista de <span>Clientes</span></h1>
+                <div>
+                    <Form.Control
+                        type="search"
+                        name="search-form"
+                        id="search-form"
+                        placeholder="Busca"
+                        className="me-2"
+                        aria-label="Search"
+                        value={q}
+                        onChange={(e) => setQ(e.target.value)}
+                    />
+                </div>
+
+                <Table responsive bordered size="sm" >
+                    <thead >
+                        <tr>
+                            <th>Nome</th>
+                            <th>Genêro</th>
+                            <th>CPF</th>
+                            <th>RG</th>
+                            <th>Endereço</th>
+                            <th>Numero</th>
+                            <th>Bairro</th>
+                            <th>Cidade</th>
+                            <th>UF</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        {search(data)?.map((cliente) =>
+                            <tr >
+
+                                <td>
+
+                                    {cliente.nome}
+
+                                </td>
+                                <td>
+                                    {cliente.genero}
+
+                                </td>
+                                <td>
+
+                                    {cliente.cpf}
+
+                                </td>
+                                <td>
+
+                                    {cliente.rg}
+
+                                </td>
+                                <td>
+                                    {cliente.endereco}
+
+                                </td>
+                                <td>
+
+                                    {cliente.numero}
+
+                                </td>
+                                <td>
+
+                                    {cliente.bairro}
+
+                                </td>
+                                <td>
+
+                                    {cliente.cidade}
+
+                                </td>
+                                <td>
+
+                                    {cliente.uf}
+
+                                </td>
+                                <td>
+                                    <ClienteDelete
+                                        id={cliente.id}
+                                        handleRemove={removeCliente}
+                                    />
+                                    
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+
+                </Table>
+
+            </section>
+        )
+    }
 }
 
 export default DisplayClientes;
