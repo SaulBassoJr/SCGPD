@@ -5,8 +5,9 @@ import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import '../layout/buscador-styles.css'
 import '../layout/sectionLayout.css';
-import { IoPencilOutline, IoTrashOutline } from 'react-icons/io5';
+import {FaSearch} from 'react-icons/fa';
 
 function DisplayClientes() {
     const [error, setError] = useState(null);
@@ -73,8 +74,9 @@ function DisplayClientes() {
     } else {
         return (
             <section className='main_section -exib'>
-                <h1>Lista de <span>Clientes</span></h1>
-                <div>
+                <h1> Lista de Clientes</h1>
+                <div className='buscador-styles'>
+                    {/* <div className='buscador-icon'><FaSearch/></div> */}
                     <Form.Control
                         type="search"
                         name="search-form"
@@ -85,6 +87,7 @@ function DisplayClientes() {
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
                     />
+                    
                 </div>
 
                 <Table responsive bordered size="sm" >
@@ -104,7 +107,7 @@ function DisplayClientes() {
                     </thead>
                     <tbody >
                         {search(data)?.map((cliente) =>
-                            <tr >
+                            <tr key={cliente.id} >
 
                                 <td>
 
