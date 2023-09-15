@@ -1,0 +1,30 @@
+.buscador-styles{
+    margin-bottom: 20px;
+    width: 500px;
+    display: flex;
+}
+
+.buscador-icon{
+    background-color: #fff;
+    width: 40px;
+    padding: 5px 0px 1px 12px;
+    border-radius: 5px;
+}
+
+@media (max-width: 1156px){
+    .buscador-styles{
+        width: 350px;
+    }
+}
+
+@media (max-width: 449px){
+    .buscador-styles{
+        width: 250px;
+    }
+}
+
+@media (max-width: 320px){
+    .buscador-styles{
+        width: 219px;
+    }
+}
