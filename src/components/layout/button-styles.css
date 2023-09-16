@@ -4,3 +4,10 @@
     margin: 1px 3px;
    
 }
+
+.button-styles.-cancel{
+    display: inline-flex;
+    margin-right: 20px;
+    margin-top: 20px;
+    align-items: center; 
+}

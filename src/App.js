@@ -12,7 +12,7 @@ import ManterServicos from './components/servicos/ManterServicos';
 import ManterVeiculos from './components/veiculos/ManterVeiculos';
 import ManterUsuarios from './components/usuarios/ManterUsuarios';
 import ManterOs from './components/os/ManterOs';
-import NewCliente from './components/clientes/NewCliente';
+
 
 function App() {
   return (

@@ -5,9 +5,9 @@ import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import '../layout/button-styles.css';
 import '../layout/buscador-styles.css'
 import '../layout/sectionLayout.css';
-import {FaSearch} from 'react-icons/fa';
 
 function DisplayClientes() {
     const [error, setError] = useState(null);

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import '../layout/sectionLayout.css';
@@ -7,18 +8,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function ManterClientes() {
-
-    const [formData, setFormData] = useState({
-        nome: '',
-        cpf: '',
-        rg: '',
-        cidade: '',
-        endereco: '',
-        cep: ''
-    });
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({});
     const [error, setError] = useState(null);
     const [response, setResponse] = useState([]);
-
 
     // const handleInputChange = (e) => {
     //     const { name, value } = e.target;
@@ -43,6 +36,7 @@ function ManterClientes() {
                 }
             });
             const data = response.data;
+            navigate('/clientes');
         } catch (error) {
             console.error('Erro ao enviar os dados:', error);
             if (error.response) {
@@ -58,6 +52,7 @@ function ManterClientes() {
                 console.log('Erro ao configurar a requisição:', error.message);
             }
         }
+    
     };
 
 
@@ -177,11 +172,11 @@ function ManterClientes() {
                     </div>
                 </Form.Group>
 
-                <Button variant="secondary" type="submit" >
+                <Button variant="secondary"  type='submit'> 
                     <IoSave />Salvar
                 </Button>
 
-                <Button variant="secondary" type="submit">
+                <Button variant="secondary" className="button-styles -cancel" type='button' href={'/clientes'}>
                     <IoStopCircleSharp /> Cancelar
                 </Button>
             </Form>
