@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Alert from 'react-bootstrap/Alert';
 
 import '../layout/button-styles.css';
 import '../layout/buscador-styles.css'
@@ -13,6 +14,8 @@ function DisplayClientes() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [clientes, setClientes] = useState([]);
+
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const [q, setQ] = useState("");
     const [searchParam] = useState(["nome", "cpf", "id"]);
@@ -62,6 +65,10 @@ function DisplayClientes() {
             const response = await axios.delete(`https://localhost:7029/SCGPD/Cliente/${id}`);
             const data = response.data;
             setClientes(clientes.filter((data) => data.id !== id));
+            setShowSuccessAlert(true);
+            setTimeout(() => {
+                setShowSuccessAlert(false);
+            }, 2000);
         } catch (error) {
             console.log(error);
         }
@@ -87,8 +94,14 @@ function DisplayClientes() {
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
                     />
-                    
+
                 </div>
+                {/* Exibe a mensagem de sucesso se showSuccessAlert for true */}
+                {showSuccessAlert && (
+                    <Alert variant="success" onClose={() => setShowSuccessAlert(false)} dismissible>
+                        Cliente excluído com sucesso!
+                    </Alert>
+                )}
 
                 <Table responsive bordered size="sm" >
                     <thead >
@@ -157,7 +170,7 @@ function DisplayClientes() {
                                         id={cliente.id}
                                         handleRemove={removeCliente}
                                     />
-                                    
+
                                 </td>
                             </tr>
                         )}
