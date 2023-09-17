@@ -26,7 +26,7 @@ function Navbarr(){
                     <Nav.Link href='/'><FaHome/> Home</Nav.Link>
                     
                     <Nav.Link href ='/clientes'><FaUsers/> Clientes</Nav.Link>
-                    <Nav.Link href =''><FaTruck/> Veiculos</Nav.Link>
+                    <Nav.Link href ='/veiculos'><FaTruck/> Veiculos</Nav.Link>
                     <Nav.Link href =''><FaTools/> Serviços</Nav.Link>
                     <Nav.Link href =''><FaFileAlt/> OS's</Nav.Link>
                     <Nav.Link href =''><FaDollarSign/> Pagamentos</Nav.Link>
