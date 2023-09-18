@@ -27,8 +27,8 @@ function Navbarr(){
                     
                     <Nav.Link href ='/clientes'><FaUsers/> Clientes</Nav.Link>
                     <Nav.Link href ='/veiculos'><FaTruck/> Veiculos</Nav.Link>
-                    <Nav.Link href =''><FaTools/> Serviços</Nav.Link>
-                    <Nav.Link href =''><FaFileAlt/> OS's</Nav.Link>
+                    <Nav.Link href ='/servicos'><FaTools/> Serviços</Nav.Link>
+                    <Nav.Link href ='/os'><FaFileAlt/> OS's</Nav.Link>
                     <Nav.Link href =''><FaDollarSign/> Pagamentos</Nav.Link>
                     <Nav.Link href =''><FaUserFriends/> Usuários</Nav.Link>
 
