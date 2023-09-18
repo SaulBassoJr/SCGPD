@@ -9,6 +9,7 @@ import Footer from './components/layout/Footer'
 import DisplayClientes from './components/clientes/DisplayClientes';
 import ManterClientes from './components/clientes/ManterClientes';
 import ManterServicos from './components/servicos/ManterServicos';
+import ManterServico from './components/servicos/ManterServico';
 import ManterVeiculos from './components/veiculos/ManterVeiculos';
 import ManterUsuarios from './components/usuarios/ManterUsuarios';
 import ManterOs from './components/os/ManterOs';
@@ -24,15 +25,16 @@ function App() {
       <Container className="min-height">
         <Routes>
           <Route exact path='/' element={<Home/>}/>
-          <Route exact path='/clientes' element={<DisplayClientes/>}/>
-          <Route exact path='/clientes/novocliente' element={<ManterClientes/>}/>
-          <Route exact path='/os' element={<DisplayOs/>}/>
-          <Route exact path='/os/novaOs' element={<ManterOs/>}/>
-          <Route exact path='/servicos' element={<DisplayServicos/>}/>
-          <Route exact path='/servicos/novoservico' element={<ManterServicos/>}/>
-          <Route exact path='/veiculos' element={<DisplayVeiculos/>}/>
-          <Route exact path='/veiculos/novoveiculo' element={<ManterVeiculos/>}/>
-          <Route exact path='/usuarios/novousuario' element={<ManterUsuarios/>}/>
+          <Route path='/clientes' element={<DisplayClientes/>}/>
+          <Route path='/clientes/novocliente' element={<ManterClientes/>}/>
+          <Route path='/os' element={<DisplayOs/>}/>
+          <Route path='/os/novaOs' element={<ManterOs/>}/>
+          <Route path='/servicos' element={<DisplayServicos/>}/>
+          <Route path='/servicos/novoservico/:id' element={<ManterServico/>}/>
+          <Route path='/servicos/novoservico' element={<ManterServicos/>}/>
+          <Route path='/veiculos' element={<DisplayVeiculos/>}/>
+          <Route path='/veiculos/novoveiculo' element={<ManterVeiculos/>}/>
+          <Route path='/usuarios/novousuario' element={<ManterUsuarios/>}/>
           {/* <Route exact path='/usuarios' element={<UsuariosListagem/>}/>
           <Route exact path='/usuarios/novousuario' element={<UsuariosCadastro/>}/>
           <Route exact path='/os' element={<OsListagem/>}/>
