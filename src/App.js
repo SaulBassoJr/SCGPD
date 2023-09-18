@@ -14,6 +14,7 @@ import ManterUsuarios from './components/usuarios/ManterUsuarios';
 import ManterOs from './components/os/ManterOs';
 import DisplayVeiculos from './components/veiculos/DisplayVeiculos';
 import DisplayServicos from './components/servicos/DisplayServicos';
+import DisplayOs from './components/os/DisplayOs';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route exact path='/' element={<Home/>}/>
           <Route exact path='/clientes' element={<DisplayClientes/>}/>
           <Route exact path='/clientes/novocliente' element={<ManterClientes/>}/>
+          <Route exact path='/os' element={<DisplayOs/>}/>
           <Route exact path='/os/novaOs' element={<ManterOs/>}/>
           <Route exact path='/servicos' element={<DisplayServicos/>}/>
           <Route exact path='/servicos/novoservico' element={<ManterServicos/>}/>
