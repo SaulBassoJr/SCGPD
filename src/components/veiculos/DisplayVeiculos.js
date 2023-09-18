@@ -17,12 +17,12 @@ function DisplayVeiculos() {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const [q, setQ] = useState("");
-    const [searchParam] = useState(["placa", "renavam", "id"]);
+    const [searchParam] = useState(["placa", "renavam"]);
     const [filterParam, setFilterParam] = useState(["All"]);
 
     const getVeiculos = async () => {
         try {
-            const response = await axios.get('https://localhost:7029/api/Veiculo');
+            const response = await axios.get('https://localhost:7029/SCGPD/Veiculo');
             const data = response.data;
             setVeiculos(data);
             setIsLoaded(true);
@@ -54,7 +54,7 @@ function DisplayVeiculos() {
 
     const removeVeiculo = async (id) => {
         try {
-            const response = await axios.delete(`https://localhost:7029/api/Veiculo/${id}`);
+            const response = await axios.delete(`https://localhost:7029/SCGPD/Veiculo/${id}`);
             const data = response.data;
             setVeiculos(veiculos.filter((data) => data.id !== id));
             setShowSuccessAlert(true);
@@ -65,6 +65,11 @@ function DisplayVeiculos() {
             console.log(error);
         }
     };
+
+    function boolToSimNao(value) {
+        return value ? 'Sim' : 'Não';
+    };
+
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -98,7 +103,6 @@ function DisplayVeiculos() {
                 <Table responsive bordered size="sm" >
                     <thead >
                         <tr>
-                            <th>Proprietario</th>
                             <th>Marca</th>
                             <th>Modelo</th>
                             <th>Placa</th>
@@ -111,12 +115,6 @@ function DisplayVeiculos() {
                     <tbody >
                         {search(data)?.map((veiculo) =>
                             <tr key={veiculo.id} >
-
-                                <td>
-
-                                    {/* {cliente.nome} */}
-
-                                </td>
                                 <td>
                                     {veiculo.marca}
 
@@ -137,12 +135,12 @@ function DisplayVeiculos() {
                                 </td>
                                 <td>
 
-                                    {veiculo.debito}
+                                {boolToSimNao(veiculo.debitos)}
 
                                 </td>
                                 <td>
 
-                                    {veiculo.financiamento}
+                                {boolToSimNao(veiculo.financiamento)}
 
                                 </td>
                                 <td>

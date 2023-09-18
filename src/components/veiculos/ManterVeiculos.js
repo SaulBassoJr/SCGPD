@@ -2,21 +2,28 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import '../layout/sectionLayout.css';
-import {IoStopCircleSharp, IoSave} from 'react-icons/io5';
+import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
 
 import InputMask from 'react-input-mask';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-function ManterVeiculos(){
+function ManterVeiculos() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({});
 
     const handleInputChange = (e, fieldName) => {
-        const { value } = e.target;
+        const { value, type } = e.target;
+        let updatedValue;
+
+        if (type === 'radio') {
+            updatedValue = e.target.id === 'radioSim' ? true : false;
+        } else {
+            updatedValue = value;
+        }
         setFormData(prevFormData => ({
             ...prevFormData,
-            [fieldName]: value
+            [fieldName]: updatedValue
         }));
     };
 
@@ -25,34 +32,23 @@ function ManterVeiculos(){
 
         // Enviar os dados para a API usando axios
         try {
-            const response = await axios.post('https://localhost:7029/api/Veiculo', formData, {
+            const response = await axios.post('https://localhost:7029/SCGPD/Veiculo', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             const data = response.data;
-           navigate('/');
+            navigate('/veiculos');
         } catch (error) {
             console.error('Erro ao enviar os dados:', error);
         }
 
     };
 
-    return (       
+    return (
         <section className='main_section -bgheight'>
             <h1>Cadastrar Veículo</h1>
             <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>*Proprietario</Form.Label>
-                    <Form.Control 
-                        type="name" 
-                        placeholder="Nome do proprietario" 
-                        value={formData.nome}
-                        onChange={(e) => handleInputChange(e, 'nome')}
-                    />
-                </Form.Group>
-
-
                 <Form.Group className="variantpar" controlId="formBasicEmail">
                     <div className="inputpar">
                         <div className='space'>
@@ -94,8 +90,8 @@ function ManterVeiculos(){
                     <div className='inputpar'>
                         <div className='space'>
                             <Form.Label>*Marca</Form.Label>
-                            <Form.Control 
-                                type="tel" 
+                            <Form.Control
+                                type="tel"
                                 placeholder="Marca do veiculo"
                                 value={formData.marca}
                                 onChange={(e) => handleInputChange(e, 'marca')}
@@ -114,9 +110,9 @@ function ManterVeiculos(){
                     </div>
                 </Form.Group>
 
-                <Form.Group className="variantpar" controlId="formBasicEmail">                
+                <Form.Group className="variantpar" controlId="formBasicEmail">
                     <div className='inputpar'>
-                        
+
                         <div className='space'>
                             <Form.Label>*Debitos</Form.Label>
                             <div>
@@ -126,19 +122,24 @@ function ManterVeiculos(){
                                     label="Sim"
                                     name="group1"
                                     id="radioSim"
+                                    value={formData.debitos}
+                                    onChange={(e) => handleInputChange(e, 'debitos')}
                                 />
-                                
+
                                 <Form.Check
                                     type="radio"
                                     inline
                                     label="Não"
                                     name="group1"
                                     id="radioNao"
+                                    value={formData.debitos}
+                                    onChange={(e) => handleInputChange(e, 'debitos')}
+
                                 />
                             </div>
                         </div>
 
-                        
+
 
                         <div>
                             <Form.Label>*Financiamento</Form.Label>
@@ -149,27 +150,31 @@ function ManterVeiculos(){
                                     label="Sim"
                                     name="group2"
                                     id="radioSim"
+                                    value={formData.financiamento}
+                                    onChange={(e) => handleInputChange(e, 'financiamento')}
                                 />
-                                
+
                                 <Form.Check
                                     type="radio"
                                     inline
                                     label="Não"
                                     name="group2"
                                     id="radioNao"
+                                    value={formData.financiamento}
+                                    onChange={(e) => handleInputChange(e, 'financiamento')}
                                 />
                             </div>
                         </div>
 
                     </div>
                 </Form.Group>
-                
+
                 <Button variant="secondary" type="submit">
-                   <IoSave/>Salvar
+                    <IoSave />Salvar
                 </Button>
 
                 <Button variant="secondary" className="button-styles -cancel" type="button" href={'/veiculos'}>
-                   <IoStopCircleSharp/> Cancelar
+                    <IoStopCircleSharp /> Cancelar
                 </Button>
             </Form>
         </section>

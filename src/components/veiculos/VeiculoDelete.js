@@ -17,7 +17,7 @@ function VeiculoDelete({id, handleRemove}){
   return(
         <div>
           <Button variant="danger"  className="button-styles" onClick={remove}> <FaRegTrashAlt/> </Button>
-          <Button variant="primary" className="button-styles" href={`/clientes/novocliente/${id}`} ><FaRegEdit/></Button>
+          <Button variant="primary" className="button-styles" href={`/veiculos/novoveiculo/${id}`} ><FaRegEdit/></Button>
       </div>
     )
 }
