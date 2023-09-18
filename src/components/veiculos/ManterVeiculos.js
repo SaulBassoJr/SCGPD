@@ -168,7 +168,7 @@ function ManterVeiculos(){
                    <IoSave/>Salvar
                 </Button>
 
-                <Button variant="secondary" type="button">
+                <Button variant="secondary" className="button-styles -cancel" type="button" href={'/veiculos'}>
                    <IoStopCircleSharp/> Cancelar
                 </Button>
             </Form>
