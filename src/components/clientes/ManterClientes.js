@@ -155,7 +155,10 @@ function ManterClientes() {
 
                         <div>
                             <Form.Label>*Gênero</Form.Label>
-                            <Form.Select type='checkbox'>
+                            <Form.Select type='checkbox' 
+                            value={formData.genero}
+                            onChange={(e) => handleInputChange(e, 'genero')}   
+                            >
                                 <option>Selecione</option>
                                 <option>M</option>
                                 <option>F</option>
@@ -190,12 +193,12 @@ function ManterClientes() {
                             <Form.Select
                                 type='checkbox'
                                 value={formData.uf}
-                                onChange={e => setUf(e.target.value)}
+                                onChange={(e) => {setUf(e.target.value); handleInputChange(e, 'uf') }}
                                 name="uf_id"
                             >
                                 <option>Selecione...</option>
                                 {listUf.map((a, b) => (
-                                    <option value={a.id}>{a.sigla}</option>
+                                    <option value={a.sigla}>{a.sigla}</option>
                                 ))}
                             </Form.Select>
                         </div>
@@ -223,7 +226,12 @@ function ManterClientes() {
                     <div className="inputpar">
                         <div className='space'>
                             <Form.Label>*Bairro</Form.Label>
-                            <Form.Control type="text" placeholder="Bairro" />
+                            <Form.Control 
+                            type="text" 
+                            placeholder="Bairro"
+                            value={formData.bairro} 
+                            onChange={(e) => handleInputChange(e, 'bairro')}
+                            />
                         </div>
                         <div className='space'>
                             <Form.Label>*Logradouro</Form.Label>
@@ -236,7 +244,12 @@ function ManterClientes() {
                         </div>
                         <div>
                             <Form.Label>*Numero</Form.Label>
-                            <Form.Control type="text" placeholder="Numero" />
+                            <Form.Control
+                                type="text"
+                                placeholder="Numero"
+                                value={formData.numero}
+                                onChange={(e) => handleInputChange(e, 'numero')} 
+                            />
                         </div>
                     </div>
                 </Form.Group>

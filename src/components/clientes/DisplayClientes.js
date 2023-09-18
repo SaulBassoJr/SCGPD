@@ -18,15 +18,8 @@ function DisplayClientes() {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const [q, setQ] = useState("");
-    const [searchParam] = useState(["nome", "cpf", "id"]);
+    const [searchParam] = useState(["nome", "cpf"]);
     const [filterParam, setFilterParam] = useState(["All"]);
-
-    // axios.get('')
-    //     .then(response =>{
-
-    //     }, error => {
-    //         console.log(error);
-    //     });
 
     const getClientes = async () => {
         try {
@@ -113,6 +106,7 @@ function DisplayClientes() {
                             <th>Endereço</th>
                             <th>Numero</th>
                             <th>Bairro</th>
+                            <th>CEP</th>
                             <th>Cidade</th>
                             <th>UF</th>
                             <th> </th>
@@ -153,6 +147,11 @@ function DisplayClientes() {
                                 <td>
 
                                     {cliente.bairro}
+
+                                </td>
+                                <td>
+
+                                    {cliente.cep}
 
                                 </td>
                                 <td>
