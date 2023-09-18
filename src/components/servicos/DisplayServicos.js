@@ -114,12 +114,12 @@ function DisplayServicos() {
 
                                 </td>
                                 <td>
-                                    {servico.valordesp}
+                                    R${servico.valorDespachante}
 
                                 </td>
                                 <td>
 
-                                    {servico.valordetran}
+                                    R${servico.valorDETRAN}
 
                                 </td>
                                 <td>
