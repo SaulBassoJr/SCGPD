@@ -22,7 +22,7 @@ function DisplayVeiculos() {
 
     const getOss = async () => {
         try {
-            const response = await axios.get('https://localhost:7029/api/Veiculo');
+            const response = await axios.get('https://localhost:7029/SCGPD/OrdemDeServico');
             const data = response.data;
             setOss(data);
             setIsLoaded(true);
@@ -54,7 +54,7 @@ function DisplayVeiculos() {
 
     const removeOs = async (id) => {
         try {
-            const response = await axios.delete(`https://localhost:7029/api/Veiculo/${id}`);
+            const response = await axios.delete(`https://localhost:7029/SCGPD/OrdemDeServico/${id}`);
             const data = response.data;
             setOss(oss.filter((data) => data.id !== id));
             setShowSuccessAlert(true);
