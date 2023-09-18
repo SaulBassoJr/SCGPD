@@ -22,7 +22,7 @@ function DisplayServicos() {
 
     const getServicos = async () => {
         try {
-            const response = await axios.get('https://localhost:7029/api/ServicoPrestado');
+            const response = await axios.get('https://localhost:7029/SCGPD/ServicoPrestado');
             const data = response.data;
             setServicos(data);
             setIsLoaded(true);
@@ -54,7 +54,7 @@ function DisplayServicos() {
 
     const removeServico = async (id) => {
         try {
-            const response = await axios.delete(`https://localhost:7029/api/ServicoPrestado/${id}`);
+            const response = await axios.delete(`https://localhost:7029/SCGPD/ServicoPrestado/${id}`);
             const data = response.data;
             setServicos(servicos.filter((data) => data.id !== id));
             setShowSuccessAlert(true);
