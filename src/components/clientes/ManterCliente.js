@@ -72,7 +72,7 @@ function ManterCliente() {
 
         // Enviar os dados para a API usando axios
         try {
-            const response = await axios.put(`https://localhost:7029/SCGPD/ServicoPrestado/${id}`, formData, {
+            const response = await axios.put(`https://localhost:7029/SCGPD/Cliente/${id}`, formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
