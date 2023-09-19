@@ -12,6 +12,7 @@ import ManterCliente from './components/clientes/ManterCliente';
 import ManterServicos from './components/servicos/ManterServicos';
 import ManterServico from './components/servicos/ManterServico';
 import ManterVeiculos from './components/veiculos/ManterVeiculos';
+import ManterVeiculo from './components/veiculos/ManterVeiculo';
 import ManterUsuarios from './components/usuarios/ManterUsuarios';
 import ManterOs from './components/os/ManterOs';
 import DisplayVeiculos from './components/veiculos/DisplayVeiculos';
@@ -35,6 +36,7 @@ function App() {
           <Route path='/servicos/novoservico/:id' element={<ManterServico/>}/>
           <Route path='/servicos/novoservico' element={<ManterServicos/>}/>
           <Route path='/veiculos' element={<DisplayVeiculos/>}/>
+          <Route path='/veiculos/novoveiculo/:id' element={<ManterVeiculo/>}/>
           <Route path='/veiculos/novoveiculo' element={<ManterVeiculos/>}/>
           <Route path='/usuarios/novousuario' element={<ManterUsuarios/>}/>
           {/* <Route exact path='/usuarios' element={<UsuariosListagem/>}/>

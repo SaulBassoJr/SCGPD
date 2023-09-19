@@ -103,6 +103,7 @@ function DisplayClientes() {
                             <th>Genêro</th>
                             <th>CPF</th>
                             <th>RG</th>
+                            <th>N°Celular</th>
                             <th>Endereço</th>
                             <th>Numero</th>
                             <th>Bairro</th>
@@ -133,6 +134,11 @@ function DisplayClientes() {
                                 <td>
 
                                     {cliente.rg}
+
+                                </td>
+                                <td>
+
+                                    {cliente.telefone}
 
                                 </td>
                                 <td>

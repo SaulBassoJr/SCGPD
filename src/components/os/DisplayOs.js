@@ -1,4 +1,4 @@
-import VeiculoDelete from './OsDelete'
+import OsDelete from './OsDelete'
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from "react";
@@ -9,7 +9,7 @@ import '../layout/button-styles.css';
 import '../layout/buscador-styles.css'
 import '../layout/sectionLayout.css';
 
-function DisplayVeiculos() {
+function DisplayOs() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [oss, setOss] = useState([]);
@@ -123,65 +123,43 @@ function DisplayVeiculos() {
 
                                 </td>
                                 <td>
-                                    {os.nome}
-
+                                    {os.cliente ? os.cliente.nome : ''}
                                 </td>
                                 <td>
-
-                                    {os.cpf}
-
+                                    {os.cliente ? os.cliente.cpf : ''}
                                 </td>
                                 <td>
-
-                                    {os.ncelular}
-
+                                    {os.cliente ? os.cliente.ncelular : ''}
                                 </td>
                                 <td>
-                                    {os.placa}
-
+                                    {os.veiculo ? os.veiculo.placa : ''}
                                 </td>
                                 <td>
-
-                                    {os.modelo}
-
+                                    {os.veiculo ? os.veiculo.modelo : ''}
                                 </td>
                                 <td>
-
-                                    {os.servico}
-
+                                    {os.servico ? os.servico.nome : ''}
                                 </td>
                                 <td>
-
-                                    {os.data}
-
+                                    {os.data ? os.data.toString() : ''}
                                 </td>
                                 <td>
-
-                                    {os.prazo}
-
+                                    {os.prazo ? os.prazo.toString() : ''}
                                 </td>
                                 <td>
-
-                                    {os.valorveiculo}
-
+                                    {os.valorveiculo ? os.valorveiculo.toString() : ''}
                                 </td>
                                 <td>
-
-                                    {os.datavenda}
-
+                                    {os.datavenda ? os.datavenda.toString() : ''}
                                 </td>
                                 <td>
-
-                                    {os.datavence}
-
+                                    {os.datavence ? os.datavence.toString() : ''}
                                 </td>
                                 <td>
-
-                                    {os.convmercosul}
-
+                                    {os.convmercosul ? os.convmercosul.toString() : ''}
                                 </td>
                                 <td>
-                                    <VeiculoDelete
+                                    <OsDelete
                                         id={os.id}
                                         handleRemove={removeOs}
                                     />
@@ -198,4 +176,4 @@ function DisplayVeiculos() {
     }
 }
 
-export default DisplayVeiculos;
+export default DisplayOs;

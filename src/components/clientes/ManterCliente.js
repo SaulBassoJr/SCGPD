@@ -20,7 +20,7 @@ function ManterCliente() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7029/SCGPD/Cliente/${id}`);
+                const response = await axios.get(`https://localhost:7029/SCGPD/Cliente/ID_${id}`);
                 const { data } = response;
                 setFormData(data);
             } catch (error) {
