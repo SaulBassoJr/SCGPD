@@ -46,12 +46,6 @@ function ManterClientes() {
         }
     }, [uf]);
 
-
-
-
-
-
-
     const handleInputChange = (e, fieldName) => {
         const { value } = e.target;
         setFormData(prevFormData => ({
@@ -94,7 +88,6 @@ function ManterClientes() {
                         onChange={(e) => handleInputChange(e, 'nome')}
                     />
                 </Form.Group>
-
 
                 <Form.Group className="variantpar" controlId="formCPF">
                     <div className="inputpar">
@@ -152,7 +145,6 @@ function ManterClientes() {
                                 )}
                             </InputMask>
                         </div>
-
                         <div>
                             <Form.Label>*Gênero</Form.Label>
                             <Form.Select type='checkbox' 
@@ -187,7 +179,6 @@ function ManterClientes() {
                                 )}
                             </InputMask>
                         </div>
-
                         <div className='space'>
                             <Form.Label>*UF</Form.Label>
                             <Form.Select
@@ -202,7 +193,6 @@ function ManterClientes() {
                                 ))}
                             </Form.Select>
                         </div>
-
                         <div>
                             <Form.Label>*Cidade</Form.Label>
                             <Form.Select
@@ -218,7 +208,6 @@ function ManterClientes() {
                                 ))}
                             </Form.Select>
                         </div>
-
                     </div>
                 </Form.Group>
 

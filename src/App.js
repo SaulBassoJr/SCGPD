@@ -8,6 +8,7 @@ import Footer from './components/layout/Footer'
 
 import DisplayClientes from './components/clientes/DisplayClientes';
 import ManterClientes from './components/clientes/ManterClientes';
+import ManterCliente from './components/clientes/ManterCliente';
 import ManterServicos from './components/servicos/ManterServicos';
 import ManterServico from './components/servicos/ManterServico';
 import ManterVeiculos from './components/veiculos/ManterVeiculos';
@@ -26,6 +27,7 @@ function App() {
         <Routes>
           <Route exact path='/' element={<Home/>}/>
           <Route path='/clientes' element={<DisplayClientes/>}/>
+          <Route path='/clientes/novocliente/:id' element={<ManterCliente/>}/>
           <Route path='/clientes/novocliente' element={<ManterClientes/>}/>
           <Route path='/os' element={<DisplayOs/>}/>
           <Route path='/os/novaOs' element={<ManterOs/>}/>
