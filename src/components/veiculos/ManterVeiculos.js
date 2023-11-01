@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
 import '../layout/sectionLayout.css';
 import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
 
@@ -45,8 +46,22 @@ function ManterVeiculos() {
 
     };
 
+    function renderHelpIcon(text) {
+        return (
+          <OverlayTrigger
+            placement="top"
+            delay={{ show: 150, hide: 400 }}
+            overlay={
+                <Popover id="popover-basic" className='help-text'>{text}</Popover>
+            }
+          >
+            <span className="help-icon">?</span>
+          </OverlayTrigger>
+        );
+      }
+
     return (
-        <section className='main_section -bgheight'>
+        <section className='main_section'>
             <h1>Cadastrar Veículo</h1>
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="variantpar" controlId="formBasicEmail">
@@ -114,7 +129,7 @@ function ManterVeiculos() {
                     <div className='inputpar'>
 
                         <div className='space'>
-                            <Form.Label>*Debitos</Form.Label>
+                            <Form.Label>*Debitos {renderHelpIcon('Marque "sim" caso exista algum débito do veículo como: Multas, documentação, impostos ou parcelas atrasadas')}</Form.Label>
                             <div>
                                 <Form.Check
                                     type="radio"
@@ -142,7 +157,7 @@ function ManterVeiculos() {
 
 
                         <div>
-                            <Form.Label>*Financiamento</Form.Label>
+                            <Form.Label>*Financiamento {renderHelpIcon('Marque "sim" caso o veículo seja financiado')}</Form.Label>
                             <div>
                                 <Form.Check
                                     type="radio"

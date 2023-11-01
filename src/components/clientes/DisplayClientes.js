@@ -89,7 +89,6 @@ function DisplayClientes() {
                     />
 
                 </div>
-                {/* Exibe a mensagem de sucesso se showSuccessAlert for true */}
                 {showSuccessAlert && (
                     <Alert variant="success" onClose={() => setShowSuccessAlert(false)} dismissible>
                         Cliente excluído com sucesso!

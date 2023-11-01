@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
 import '../layout/sectionLayout.css';
 import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
 import InputMask from 'react-input-mask';
@@ -72,6 +73,20 @@ function ManterClientes() {
 
     };
 
+    function renderHelpIcon(text) {
+        return (
+          <OverlayTrigger
+            placement="top"
+            delay={{ show: 150, hide: 400 }}
+            overlay={
+                <Popover id="popover-basic" className='help-text'>{text}</Popover>
+            }
+          >
+            <span className="help-icon">?</span>
+          </OverlayTrigger>
+        );
+      }
+
 
 
     return (
@@ -79,10 +94,10 @@ function ManterClientes() {
             <h1>Cadastrar Cliente</h1>
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formNome">
-                    <Form.Label>*Nome</Form.Label>
+                    <Form.Label>*Nome </Form.Label>
                     <Form.Control
                         type="name"
-                        placeholder="Nome"
+                        placeholder="Nome Completo"
                         maxLength="100"
                         value={formData.nome}
                         onChange={(e) => handleInputChange(e, 'nome')}
@@ -154,7 +169,7 @@ function ManterClientes() {
                                 <option>Selecione</option>
                                 <option>M</option>
                                 <option>F</option>
-                                <option>Outro</option>
+                                <option>O</option>
                             </Form.Select>
                         </div>
                     </div>
@@ -223,7 +238,7 @@ function ManterClientes() {
                             />
                         </div>
                         <div className='space'>
-                            <Form.Label>*Logradouro</Form.Label>
+                            <Form.Label>*Logradouro {renderHelpIcon('Insira o nome da Rua e complemento (se existir) Ex: Rua Ficção, bloco xx, apto xx.')}</Form.Label>
                             <Form.Control
                                 type="text"
                                 placeholder="Logradouro"

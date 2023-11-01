@@ -55,3 +55,21 @@
     margin-right: 20px;
 }
 
+.help-text{
+    background-color: #e7f712;
+    text-align: left;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.help-icon {
+    padding: 0px 4px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 2px;
+    color: #fff;
+    background-color: #FFA500;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: help;
+}
