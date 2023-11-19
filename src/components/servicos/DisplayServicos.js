@@ -1,13 +1,16 @@
+import Button from 'react-bootstrap/Button';
 import ServicoDelete from './ServicoDelete';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from 'react-bootstrap/Alert';
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 import '../layout/button-styles.css';
 import '../layout/buscador-styles.css'
 import '../layout/sectionLayout.css';
+import '../layout/table.css';
 
 function DisplayServicos() {
     const [error, setError] = useState(null);
@@ -19,6 +22,9 @@ function DisplayServicos() {
     const [q, setQ] = useState("");
     const [searchParam] = useState(["nome"]);
     const [filterParam, setFilterParam] = useState(["All"]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5);
 
     const getServicos = async () => {
         try {
@@ -36,6 +42,33 @@ function DisplayServicos() {
     }, []);
 
     const data = Object.values(servicos);
+
+    // Lógica para paginar os dados
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = search(data).slice(indexOfFirstItem, indexOfLastItem);
+
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(search(data).length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
+
+    const renderTableRows = () => {
+        return currentItems.map((servico) => (
+            <tr key={servico.id}>
+                <td>{servico.nome}</td>
+                <td className="text-end">R${servico.valorDespachante.toFixed(2)}</td>
+                <td className="text-end">R${servico.valorDETRAN.toFixed(2)}</td>
+                <td className="text-center">
+                    <ServicoDelete id={servico.id} handleRemove={removeServico} />
+                </td>
+            </tr>
+        ));
+    };
+
+    const handlePagination = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     function search(servicos) {
         return servicos.filter((servico) => {
@@ -65,6 +98,57 @@ function DisplayServicos() {
             console.log(error);
         }
     };
+
+    // Lógica para renderizar os botões de paginação
+    const renderPaginationButtons = () => {
+        const totalItems = search(data).length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        const pages = [];
+        const delta = 1; // Quantidade de botões antes e depois da página atual
+
+        let start = Math.max(1, currentPage - delta);
+        let end = Math.min(totalPages, currentPage + delta);
+
+        if (totalPages > 3) {
+            if (currentPage <= delta + 1) {
+                end = 2 * delta + 1;
+            } else if (currentPage >= totalPages - delta) {
+                start = totalPages - 2 * delta;
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            pages.push(
+                <li className="list" key={i}>
+                    <Button className={`buttonList ${currentPage === i ? 'activePage' : ''}`} onClick={() => handlePagination(i)}>
+                        {i}
+                    </Button>
+                </li>
+            );
+        }
+
+        return (
+            <ul className="pagination-list">
+                {currentPage > 1 && (
+                    <li className="list">
+                        <Button className="buttonList" onClick={() => handlePagination(currentPage - 1)}>
+                            <FaAngleLeft />
+                        </Button>
+                    </li>
+                )}
+                {pages}
+                {currentPage < totalPages && (
+                    <li className="list">
+                        <Button className="buttonList" onClick={() => handlePagination(currentPage + 1)}>
+                            <FaAngleRight />
+                        </Button>
+                    </li>
+                )}
+            </ul>
+        );
+    };
+
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -96,44 +180,24 @@ function DisplayServicos() {
                 )}
 
                 <Table responsive bordered size="sm" >
-                    <thead >
+                    <thead className="table">
                         <tr>
-                            <th>Serviço</th>
-                            <th>Valor Despachante</th>
-                            <th>Valor DETRAN</th>
+                            <th className="text-center">Serviço</th>
+                            <th className="text-center">Valor Despachante</th>
+                            <th className="text-center">Valor DETRAN</th>
                             <th> </th>
                         </tr>
                     </thead>
                     <tbody >
-                        {search(data)?.map((servico) =>
-                            <tr key={servico.id} >
-
-                                <td>
-
-                                    {servico.nome}
-
-                                </td>
-                                <td>
-                                    R${servico.valorDespachante}
-
-                                </td>
-                                <td>
-
-                                    R${servico.valorDETRAN}
-
-                                </td>
-                                <td>
-                                    <ServicoDelete
-                                        id={servico.id}
-                                        handleRemove={removeServico}
-                                    />
-
-                                </td>
-                            </tr>
-                        )}
+                        {renderTableRows()}
                     </tbody>
 
                 </Table>
+
+
+                <div className="paginat">
+                    {renderPaginationButtons()}
+                </div>
 
             </section>
         )
