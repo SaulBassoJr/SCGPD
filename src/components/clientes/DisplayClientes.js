@@ -5,10 +5,12 @@ import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from 'react-bootstrap/Alert';
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 import '../layout/button-styles.css';
 import '../layout/buscador-styles.css'
 import '../layout/sectionLayout.css';
+import '../layout/table.css';
 
 function DisplayClientes() {
     const [error, setError] = useState(null);
@@ -20,6 +22,9 @@ function DisplayClientes() {
     const [q, setQ] = useState("");
     const [searchParam] = useState(["nome", "cpf"]);
     const [filterParam, setFilterParam] = useState(["All"]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5);
 
     const getClientes = async () => {
         try {
@@ -37,6 +42,40 @@ function DisplayClientes() {
     }, []);
 
     const data = Object.values(clientes);
+
+    // Lógica para paginar os dados
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = search(data).slice(indexOfFirstItem, indexOfLastItem);
+
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(search(data).length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
+
+    const renderTableRows = () => {
+        return currentItems.map((cliente) => (
+            <tr key={cliente.id}>
+                <td>{cliente.nome}</td>
+                <td className="text-end">{cliente.cpf}</td>
+                <td className="text-end">{cliente.telefone}</td>
+                <td >{cliente.endereco}</td>
+                <td className="text-end">{cliente.numero}</td>
+                <td>{cliente.bairro}</td>
+                <td className="text-end">{cliente.cep}</td>
+                <td>{cliente.cidade}</td>
+                <td>{cliente.uf}</td>
+                <td className="text-center">
+                    <ClienteDelete id={cliente.id} handleRemove={removeCliente} />
+                </td>
+            </tr>
+        ));
+    };
+
+    const handlePagination = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
 
     function search(clientes) {
         return clientes.filter((cliente) => {
@@ -67,6 +106,58 @@ function DisplayClientes() {
         }
     };
 
+
+    // Lógica para renderizar os botões de paginação
+    const renderPaginationButtons = () => {
+        const totalItems = search(data).length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        const pages = [];
+        const delta = 1; // Quantidade de botões antes e depois da página atual
+
+        let start = Math.max(1, currentPage - delta);
+        let end = Math.min(totalPages, currentPage + delta);
+
+        if (totalPages > 3) {
+            if (currentPage <= delta + 1) {
+                end = 2 * delta + 1;
+            } else if (currentPage >= totalPages - delta) {
+                start = totalPages - 2 * delta;
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            pages.push(
+                <li className="list" key={i}>
+                    <Button className={`buttonList ${currentPage === i ? 'activePage' : ''}`} onClick={() => handlePagination(i)}>
+                        {i}
+                    </Button>
+                </li>
+            );
+        }
+
+        return (
+            <ul className="pagination-list">
+                {currentPage > 1 && (
+                    <li className="list">
+                        <Button className="buttonList" onClick={() => handlePagination(currentPage - 1)}>
+                            <FaAngleLeft />
+                        </Button>
+                    </li>
+                )}
+                {pages}
+                {currentPage < totalPages && (
+                    <li className="list">
+                        <Button className="buttonList" onClick={() => handlePagination(currentPage + 1)}>
+                            <FaAngleRight />
+                        </Button>
+                    </li>
+                )}
+            </ul>
+        );
+    };
+
+
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -96,91 +187,29 @@ function DisplayClientes() {
                 )}
 
                 <Table responsive bordered size="sm" >
-                    <thead >
+                    <thead className="table">
                         <tr>
-                            <th>Nome</th>
-                            <th>Genêro</th>
-                            <th>CPF</th>
-                            <th>RG</th>
-                            <th>N°Celular</th>
-                            <th>Endereço</th>
-                            <th>Numero</th>
-                            <th>Bairro</th>
-                            <th>CEP</th>
-                            <th>Cidade</th>
-                            <th>UF</th>
+                            <th className="text-center">Nome</th>
+                            <th className="text-center">CPF</th>
+                            <th className="text-center">N°Celular</th>
+                            <th className="text-center">Endereço</th>
+                            <th className="text-center">Numero</th>
+                            <th className="text-center">Bairro</th>
+                            <th className="text-center">CEP</th>
+                            <th className="text-center">Cidade</th>
+                            <th className="text-center">UF</th>
                             <th> </th>
                         </tr>
                     </thead>
                     <tbody >
-                        {search(data)?.map((cliente) =>
-                            <tr key={cliente.id} >
-
-                                <td>
-
-                                    {cliente.nome}
-
-                                </td>
-                                <td>
-                                    {cliente.genero}
-
-                                </td>
-                                <td>
-
-                                    {cliente.cpf}
-
-                                </td>
-                                <td>
-
-                                    {cliente.rg}
-
-                                </td>
-                                <td>
-
-                                    {cliente.telefone}
-
-                                </td>
-                                <td>
-                                    {cliente.endereco}
-
-                                </td>
-                                <td>
-
-                                    {cliente.numero}
-
-                                </td>
-                                <td>
-
-                                    {cliente.bairro}
-
-                                </td>
-                                <td>
-
-                                    {cliente.cep}
-
-                                </td>
-                                <td>
-
-                                    {cliente.cidade}
-
-                                </td>
-                                <td>
-
-                                    {cliente.uf}
-
-                                </td>
-                                <td>
-                                    <ClienteDelete
-                                        id={cliente.id}
-                                        handleRemove={removeCliente}
-                                    />
-
-                                </td>
-                            </tr>
-                        )}
+                        {renderTableRows()}
                     </tbody>
 
                 </Table>
+
+                <div className="paginat">
+                    {renderPaginationButtons()}
+                </div>
 
             </section>
         )
