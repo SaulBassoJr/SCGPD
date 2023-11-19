@@ -10,7 +10,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 function Navbarr(){
     return(
         <Navbar className={styles.navbar}  collapseOnSelect variant="dark" expand="lg">
-            <Navbar.Brand href='/'><img src={logo} alt='front_scgpd'/></Navbar.Brand >
+            <Navbar.Brand href='/home'><img src={logo} alt='front_scgpd'/></Navbar.Brand >
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="justify-content-end flex-grow-1 pe-3">
@@ -23,7 +23,7 @@ function Navbarr(){
                         <NavDropdown.Item href ='/usuarios/novousuario'><FaUserFriends/> Cadastrar Usuários</NavDropdown.Item>
                     </NavDropdown>
 
-                    <Nav.Link href='/'><FaHome/> Home</Nav.Link>
+                    <Nav.Link href='/home'><FaHome/> Home</Nav.Link>
                     
                     <Nav.Link href ='/clientes'><FaUsers/> Clientes</Nav.Link>
                     <Nav.Link href ='/veiculos'><FaTruck/> Veiculos</Nav.Link>
