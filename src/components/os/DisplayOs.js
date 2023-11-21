@@ -86,16 +86,16 @@ function DisplayOs({ os }) {
         }
     };
 
-    const [showModal, setShowModal] = useState(false);
+        const [showModal, setShowModal] = useState(false);
 
-    const handleOpenModal = (selectedOs) => {
-        setPrintData(selectedOs);
-        setShowModal(true);
-    };
+        const handleOpenModal = (selectedOs) => {
+            setPrintData(selectedOs);
+            setShowModal(true);
+        };
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
+        const handleCloseModal = () => {
+            setShowModal(false);
+        };
 
 
 
@@ -178,7 +178,6 @@ function DisplayOs({ os }) {
                                     <OsDelete
                                         id={os.id}
                                         handleRemove={removeOs}
-                                        os={os}
                                     //handleImprime={() => handleImprime(os)}
                                     />
                                 </td>

@@ -18,6 +18,7 @@ function DisplayClientes() {
     const [clientes, setClientes] = useState([]);
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [showAvisoAlert, setShowAvisoAlert] = useState(false);
 
     const [q, setQ] = useState("");
     const [searchParam] = useState(["nome", "cpf"]);
@@ -103,7 +104,14 @@ function DisplayClientes() {
                 setShowSuccessAlert(false);
             }, 2000);
         } catch (error) {
-            console.log(error);
+            if (error.response && error.response.data === "Cliente possuis os cadastradas") {
+                setShowAvisoAlert(true);
+                setTimeout(() => {
+                    setShowAvisoAlert(false);
+                }, 5000);
+            } else {
+                console.log(error);
+            }
         }
     };
 
@@ -186,6 +194,12 @@ function DisplayClientes() {
                         Cliente excluído com sucesso!
                     </Alert>
                 )}
+                {showAvisoAlert && (
+                    <Alert variant="warning" onClose={() => setShowAvisoAlert(false)} dismissible>
+                        Não é possível excluir este cliente, pois está vinculado a uma Ordem de Serviço.
+                    </Alert>
+                )}
+
 
                 <Table responsive bordered size="sm" >
                     <thead className="table">
