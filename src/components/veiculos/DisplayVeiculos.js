@@ -18,6 +18,7 @@ function DisplayVeiculos() {
     const [veiculos, setVeiculos] = useState([]);
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [showAvisoAlert, setShowAvisoAlert] = useState(false);
 
     const [q, setQ] = useState("");
     const [searchParam] = useState(["placa", "renavam"]);
@@ -29,7 +30,8 @@ function DisplayVeiculos() {
     const getVeiculos = async () => {
         try {
             const response = await axios.get('https://localhost:7029/SCGPD/Veiculo');
-            const data = response.data;
+            let data = response.data;
+            data.sort((a, b) => (a.modelo.toLowerCase() > b.modelo.toLowerCase()) ? 1 : -1);
             setVeiculos(data);
             setIsLoaded(true);
         } catch (error) {
@@ -96,8 +98,16 @@ function DisplayVeiculos() {
             setTimeout(() => {
                 setShowSuccessAlert(false);
             }, 2000);
-        } catch (error) {
-            console.log(error);
+        } 
+        catch (error) {
+                if (error.response && error.response.data === "Veiculo possui ordens de serviço cadastradas") {
+                    setShowAvisoAlert(true);
+                    setTimeout(() => {
+                        setShowAvisoAlert(false);
+                    }, 5000);
+                } else {
+                    console.log(error);
+                }
         }
     };
 
@@ -184,6 +194,11 @@ function DisplayVeiculos() {
                 {showSuccessAlert && (
                     <Alert variant="success" onClose={() => setShowSuccessAlert(false)} dismissible>
                         Veiculo excluído com sucesso!
+                    </Alert>
+                )}
+                {showAvisoAlert && (
+                    <Alert variant="warning" onClose={() => setShowAvisoAlert(false)} dismissible>
+                        Não é possível excluir este veículo, pois está vinculado a uma Ordem de Serviço.
                     </Alert>
                 )}
 
