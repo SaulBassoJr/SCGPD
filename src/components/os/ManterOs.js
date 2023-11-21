@@ -28,9 +28,9 @@ function ManterOs() {
         },
         dataCriacao: '',
         prazo: '',
-        valorVeiculo: '',
-        dataVenda: '',
-        dataVencimento: '',
+        valorVeiculo: null,
+        dataVenda: null,
+        dataVencimento: null,
         conversaoMercosul: false,
         observacoes: '',
     });
@@ -327,6 +327,7 @@ function ManterOs() {
                                 type="date"
                                 value={formData.dataVenda}
                                 onChange={(e) => handleInputChange(e, 'dataVenda')}
+                                dateFormat="dd/MM/yyyy" 
                             />
                         </div>
 
@@ -336,6 +337,7 @@ function ManterOs() {
                                 type="date"
                                 value={formData.dataVencimento}
                                 onChange={(e) => handleInputChange(e, 'dataVencimento')}
+                                dateFormat="dd/MM/yyyy" 
                             />
                         </div>
                     </div>

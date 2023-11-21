@@ -41,11 +41,11 @@ function ImprimeOs({ os }) {
                         <p className="lineP"><span className="spanSt">NOME:</span> {os.cliente ? os.cliente.nome : ''}</p>
                         <div className="divPar">
                             <p className="lineP"><span className="spanSt">CPF:</span> {os.cliente ? os.cliente.cpf : ''}</p>
-                            <p className="lineP"><span className="spanSt">DATA VENDA:</span> {os.dataVenda !== undefined ? new Date(os.dataVenda).toLocaleDateString('pt-BR') : ''}</p>
+                            <p className="lineP"><span className="spanSt">DATA VENDA:</span> {os.dataVenda !== null ? new Date(os.dataVenda).toLocaleDateString('pt-BR') : ''}</p>
                         </div>
                         <div className="divPar">
                             <p className="lineP"><span className="spanSt">TEL:</span> {os.cliente ? os.cliente.telefone : ''}</p>
-                            <p className="lineP"><span className="spanSt">VENCE:</span> {os.dataVencimento !== undefined ? new Date(os.dataVencimento).toLocaleDateString('pt-BR') : ''}</p>
+                            <p className="lineP"><span className="spanSt">VENCE:</span> {os.dataVencimento !== null ? new Date(os.dataVencimento).toLocaleDateString('pt-BR') : ''}</p>
                         </div>
                         <div className="divPar">
                             <p className="lineP"><span className="spanSt">PLACA:</span> {os.veiculo ? os.veiculo.placa : ''}</p>
@@ -86,11 +86,11 @@ function ImprimeOs({ os }) {
                         <p className="lineP"><span className="spanSt">NOME:</span> {os.cliente ? os.cliente.nome : ''}</p>
                         <div className="divPar">
                             <p className="lineP"><span className="spanSt">CPF:</span> {os.cliente ? os.cliente.cpf : ''}</p>
-                            <p className="lineP"><span className="spanSt">DATA VENDA:</span> {os.dataVenda !== undefined ? new Date(os.dataVenda).toLocaleDateString('pt-BR') : ''}</p>
+                            <p className="lineP"><span className="spanSt">DATA VENDA:</span> {os.dataVenda !== null ? new Date(os.dataVenda).toLocaleDateString('pt-BR') : ''}</p>
                         </div>
                         <div className="divPar">
                             <p className="lineP"><span className="spanSt">TEL:</span> {os.cliente ? os.cliente.telefone : ''}</p>
-                            <p className="lineP"><span className="spanSt">VENCE:</span> {os.dataVencimento !== undefined ? new Date(os.dataVencimento).toLocaleDateString('pt-BR') : ''}</p>
+                            <p className="lineP"><span className="spanSt">VENCE:</span> {os.dataVencimento !== null ? new Date(os.dataVencimento).toLocaleDateString('pt-BR') : ''}</p>
                         </div>
                         <div className="divPar">
                             <p className="lineP"><span className="spanSt">PLACA:</span> {os.veiculo ? os.veiculo.placa : ''}</p>
