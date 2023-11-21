@@ -5,19 +5,25 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from 'react-bootstrap/Alert';
 
+import { Modal, Button } from 'react-bootstrap';
+import ImprimeOs from './ImprimeOs'; // Seu componente ImprimeOs
+
+
 import '../layout/button-styles.css';
 import '../layout/buscador-styles.css'
 import '../layout/sectionLayout.css';
 
-function DisplayOs() {
+function DisplayOs({ os }) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [oss, setOss] = useState([]);
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
+    const [printData, setPrintData] = useState(null);
+
     const [q, setQ] = useState("");
-    const [searchParam] = useState(["placa", "renavam", "id"]);
+    const [searchParam] = useState(["cliente.nome", "veiculo.placa", "servicoPrestado.nome"]);
     const [filterParam, setFilterParam] = useState(["All"]);
 
     const getOss = async () => {
@@ -39,18 +45,32 @@ function DisplayOs() {
 
     function search(oss) {
         return oss.filter((os) => {
-            if (filterParam == "All") {
+            if (filterParam == 'All') {
                 return searchParam.some((newOs) => {
-                    return (
-                        os[newOs]
-                            .toString()
-                            .toLowerCase()
-                            .indexOf(q.toLowerCase()) > -1
-                    );
+                    const fields = newOs.split('.'); // Divide o campo em partes para navegá-lo
+                    let fieldValue = os;
+
+                    // Navega pelos campos aninhados, se houver
+                    for (let field of fields) {
+                        fieldValue = fieldValue[field];
+                        if (!fieldValue) break;
+                    }
+
+                    if (fieldValue) {
+                        const fieldValueString = fieldValue.toString().toLowerCase();
+                        return fieldValueString.includes(q.toLowerCase());
+                    }
+                    return false;
                 });
+            } else {
+                return os[filterParam]
+                    ?.toString()
+                    .toLowerCase()
+                    .includes(q.toLowerCase());
             }
         });
     }
+
 
     const removeOs = async (id) => {
         try {
@@ -65,6 +85,19 @@ function DisplayOs() {
             console.log(error);
         }
     };
+
+    const [showModal, setShowModal] = useState(false);
+
+    const handleOpenModal = (selectedOs) => {
+        setPrintData(selectedOs);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -97,79 +130,79 @@ function DisplayOs() {
                 <Table responsive bordered size="sm" >
                     <thead >
                         <tr>
-                            <th>Proprietario</th>
-                            <th>CPF</th>
-                            <th>N° Celular</th>
-                            <th>Placa do Veiculo</th>
-                            <th>Modelo do Veiculo</th>
-                            <th>Serviço Prestado</th>
-                            <th>Valor Serviço</th>
-                            <th>Data</th>
-                            <th>Prazo</th>
-                            <th>Data Venda</th>
-                            <th>Data Vencimento</th>
-                            <th>Converção MercoSul</th>
-                            <th>Observações</th>
+                            <th className="text-center">Proprietario</th>
+                            <th className="text-center">CPF</th>
+                            <th className="text-center">N° Celular</th>
+                            <th className="text-center">Placa do Veiculo</th>
+                            <th className="text-center">Modelo do Veiculo</th>
+                            <th className="text-center">Serviço Prestado</th>
+                            <th className="text-center">Valor Serviço</th>
+                            <th className="text-center">Data</th>
+                            <th className="text-center">Prazo</th>
+                            <th> </th>
                             <th> </th>
                         </tr>
                     </thead>
                     <tbody >
                         {search(data)?.map((os) =>
                             <tr key={os.id} >
-
-                                <td>
-
-                                    {/* {cliente.nome} */}
-
-                                </td>
                                 <td>
                                     {os.cliente ? os.cliente.nome : ''}
                                 </td>
-                                <td>
+                                <td className="text-end">
                                     {os.cliente ? os.cliente.cpf : ''}
                                 </td>
-                                <td>
-                                    {os.cliente ? os.cliente.ncelular : ''}
+                                <td className="text-end">
+                                    {os.cliente ? os.cliente.telefone : ''}
                                 </td>
-                                <td>
+                                <td className="text-end">
                                     {os.veiculo ? os.veiculo.placa : ''}
                                 </td>
                                 <td>
                                     {os.veiculo ? os.veiculo.modelo : ''}
                                 </td>
                                 <td>
-                                    {os.servico ? os.servico.nome : ''}
+                                    {os.servicoPrestado ? os.servicoPrestado.nome : ''}
                                 </td>
-                                <td>
-                                    {os.data ? os.data.toString() : ''}
+                                <td className="text-end">
+                                    R${os.servicoPrestado ? (os.servicoPrestado.valorDespachante + os.servicoPrestado.valorDETRAN).toFixed(2) : ''}
                                 </td>
-                                <td>
-                                    {os.prazo ? os.prazo.toString() : ''}
+                                <td className="text-center">
+                                    {os.dataCriacao !== undefined ? new Date(os.dataCriacao).toLocaleDateString('pt-BR') : ''}
                                 </td>
-                                <td>
-                                    {os.valorveiculo ? os.valorveiculo.toString() : ''}
+                                <td className="text-end">
+                                    {os.prazo !== undefined ? os.prazo : ''}
                                 </td>
-                                <td>
-                                    {os.datavenda ? os.datavenda.toString() : ''}
-                                </td>
-                                <td>
-                                    {os.datavence ? os.datavence.toString() : ''}
-                                </td>
-                                <td>
-                                    {os.convmercosul ? os.convmercosul.toString() : ''}
-                                </td>
-                                <td>
+
+                                <td className="text-center">
                                     <OsDelete
                                         id={os.id}
                                         handleRemove={removeOs}
+                                        os={os}
+                                    //handleImprime={() => handleImprime(os)}
                                     />
-
+                                </td>
+                                <td className="text-center">
+                                    <Button className="pdfButton" onClick={() => handleOpenModal(os)}>Visualizar OS</Button>
                                 </td>
                             </tr>
                         )}
                     </tbody>
 
                 </Table>
+                <div>
+                    <Modal show={showModal} onHide={handleCloseModal} size="lg">
+                        <Modal.Header closeButton>
+                            <Modal.Title>Visualizar Ordem de Serviço</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <ImprimeOs os={printData} />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button  onClick={handleCloseModal}>Fechar</Button>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
 
             </section>
         )

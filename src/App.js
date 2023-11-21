@@ -19,14 +19,17 @@ import DisplayVeiculos from './components/veiculos/DisplayVeiculos';
 import DisplayServicos from './components/servicos/DisplayServicos';
 import DisplayOs from './components/os/DisplayOs';
 import LoginPage from './components/login/LoginPage';
+import DisplayPagamentos from './components/pagamentos/DisplayPagamentos';
+import ImprimeOs from './components/os/ImprimeOs';
 
 import { useLocation, useNavigate  } from 'react-router-dom';
+import { AuthProvider } from './components/hooks/useAuth';
 
 function NavbarConditional() {
   const location = useLocation();
 
   // Lista de rotas onde a Navbar não deve ser exibida
-  const excludedRoutes = ['/']; // Adicione as rotas onde não deseja exibir a Navbar
+  const excludedRoutes = ['/login']; // Adicione as rotas onde não deseja exibir a Navbar
 
   if (excludedRoutes.includes(location.pathname)) {
     return null; // Não renderiza a Navbar nas rotas da lista excludedRoutes
@@ -35,7 +38,7 @@ function NavbarConditional() {
   return <Navbarr />; // Renderiza a Navbar em outras rotas
 }
 
-const isUserAuthenticated = false;
+const isUserAuthenticated = true;
 
 function App() {
   
@@ -45,20 +48,22 @@ function App() {
       <NavbarConditional />
       <Container className="min-height">
         <Routes>
-          <Route exact path='/home' element={isUserAuthenticated ? <Home/> : <Navigate to="/" />}/>
-          <Route path="/" element={<LoginPage />} />
-          <Route path='/clientes' element={isUserAuthenticated ? <DisplayClientes /> : <Navigate to="/" />}/>
-          <Route path='/clientes/novocliente/:id' element={isUserAuthenticated ? <ManterCliente /> : <Navigate to="/" />}/>
-          <Route path='/clientes/novocliente' element={isUserAuthenticated ? <ManterClientes /> : <Navigate to="/" />}/>
-          <Route path='/os' element={isUserAuthenticated ? <DisplayOs /> : <Navigate to="/" />}/>
-          <Route path='/os/novaOs' element={isUserAuthenticated ? <ManterOs /> : <Navigate to="/" />}/>
+          <Route exact path='/home' element={isUserAuthenticated ? <Home/> : <Navigate to="/login" />}/>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path='/clientes' element={isUserAuthenticated ? <DisplayClientes /> : <Navigate to="/login" />}/>
+          <Route path='/clientes/novocliente/:id' element={isUserAuthenticated ? <ManterCliente /> : <Navigate to="/login" />}/>
+          <Route path='/clientes/novocliente' element={isUserAuthenticated ? <ManterClientes /> : <Navigate to="/login" />}/>
+          <Route path='/os' element={isUserAuthenticated ? <DisplayOs /> : <Navigate to="/login" />}/>
+          <Route path='/os/novaOs' element={isUserAuthenticated ? <ManterOs /> : <Navigate to="/login" />}/>
           <Route path='/servicos'  element={isUserAuthenticated ? <DisplayServicos /> : <Navigate to="/" />}/>
-          <Route path='/servicos/novoservico/:id' element={isUserAuthenticated ? <ManterServico /> : <Navigate to="/" />}/>
-          <Route path='/servicos/novoservico' element={isUserAuthenticated ? <ManterServicos /> : <Navigate to="/" />}/>
-          <Route path='/veiculos' element={isUserAuthenticated ? <DisplayVeiculos /> : <Navigate to="/" />}/>
-          <Route path='/veiculos/novoveiculo/:id' element={isUserAuthenticated ? <ManterVeiculo /> : <Navigate to="/" />}/>
-          <Route path='/veiculos/novoveiculo' element={isUserAuthenticated ? <ManterVeiculos /> : <Navigate to="/" />}/>
-          <Route path='/usuarios/novousuario' element={isUserAuthenticated ? <ManterUsuarios /> : <Navigate to="/" />}/>
+          <Route path='/servicos/novoservico/:id' element={isUserAuthenticated ? <ManterServico /> : <Navigate to="/login" />}/>
+          <Route path='/servicos/novoservico' element={isUserAuthenticated ? <ManterServicos /> : <Navigate to="/login" />}/>
+          <Route path='/veiculos' element={isUserAuthenticated ? <DisplayVeiculos /> : <Navigate to="/login" />}/>
+          <Route path='/veiculos/novoveiculo/:id' element={isUserAuthenticated ? <ManterVeiculo /> : <Navigate to="/login" />}/>
+          <Route path='/veiculos/novoveiculo' element={isUserAuthenticated ? <ManterVeiculos /> : <Navigate to="/login" />}/>
+          <Route path='/usuarios/novousuario' element={isUserAuthenticated ? <ManterUsuarios /> : <Navigate to="/login" />}/>
+          <Route path='/pagamentos' element={isUserAuthenticated ? <DisplayPagamentos /> : <Navigate to="/login" />}/>
+          <Route path='/OsNova' element={isUserAuthenticated ? <ImprimeOs /> : <Navigate to="/login" />}/>
           {/* <Route exact path='/usuarios' element={<UsuariosListagem/>}/>
           <Route exact path='/usuarios/novousuario' element={<UsuariosCadastro/>}/>
           <Route exact path='/os' element={<OsListagem/>}/>

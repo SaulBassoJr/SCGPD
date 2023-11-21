@@ -166,7 +166,7 @@ function ManterClientes() {
                             value={formData.genero}
                             onChange={(e) => handleInputChange(e, 'genero')}   
                             >
-                                <option>Selecione</option>
+                                <option>Selecione...</option>
                                 <option>M</option>
                                 <option>F</option>
                                 <option>O</option>
@@ -262,7 +262,7 @@ function ManterClientes() {
                     <IoSave />Salvar
                 </Button>
 
-                <Button variant="secondary" className="button-styles -cancel" type='button' href={'/clientes'}>
+                <Button variant="secondary" className="button-styles -cancel" type='button' href={'/home'}>
                     <IoStopCircleSharp /> Cancelar
                 </Button>
             </Form>

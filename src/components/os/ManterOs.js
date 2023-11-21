@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
 import axios from 'axios';
 
 function ManterOs() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         cliente: {
             id: null,
@@ -16,18 +18,14 @@ function ManterOs() {
             modelo: '',
         },
         servicoPrestado: {
-            valorDespachante: '',
-            valorDETRAN: '',
+            valorDespachante: 0,
+            valorDETRAN: 0,
         },
-        pagamentos: [
-            {
-                id: 1, // Change this to the appropriate payment ID
-                formaDePagamento: {
-                    id: 2, // Change this to the appropriate formaDePagamento ID
-                    nome: 'string',
-                },
-            },
-        ],
+        pagamento: {
+            id: 0, // Change this to the appropriate payment ID
+            formaDePagamento: "",
+            valor: 0,
+        },
         dataCriacao: '',
         prazo: '',
         valorVeiculo: '',
@@ -40,23 +38,23 @@ function ManterOs() {
     const [clientes, setClientes] = useState([]);
     const [veiculos, setVeiculos] = useState([]);
     const [servicosPrestados, setServicosPrestados] = useState([]);
-    const [formasDePagamento, setFormasDePagamento] = useState([]);
+    const [Pagamentos, setPagamentos] = useState([]);
 
     useEffect(() => {
         // Fetch data on component mount
         const fetchData = async () => {
             try {
-                const [clientesRes, veiculosRes, servicosRes, formasPagamentoRes] = await Promise.all([
+                const [clientesRes, veiculosRes, servicosRes, PagamentosRes] = await Promise.all([
                     axios.get('https://localhost:7029/SCGPD/Cliente'),
                     axios.get('https://localhost:7029/SCGPD/Veiculo'),
                     axios.get('https://localhost:7029/SCGPD/ServicoPrestado'),
-                    axios.get('https://localhost:7029/SCGPD/FormaDePagamento'),
+                    axios.get('https://localhost:7029/SCGPD/Pagamento'),
                 ]);
 
                 setClientes(clientesRes.data);
                 setVeiculos(veiculosRes.data);
                 setServicosPrestados(servicosRes.data);
-                setFormasDePagamento(formasPagamentoRes.data);
+                setPagamentos(PagamentosRes.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -105,34 +103,15 @@ function ManterOs() {
         }
     };
 
-    const handlePagamentoChange = (pagamentoId, formaDePagamentoId) => {
-        const updatedPagamentos = formData.pagamentos.map((pagamento) => {
-            if (pagamento.id === pagamentoId) {
-                return {
-                    ...pagamento,
-                    formaDePagamento: {
-                        id: formaDePagamentoId,
-                        nome: formasDePagamento.find((forma) => forma.id === formaDePagamentoId).nome,
-                    },
-                };
-            }
-            return pagamento;
-        });
-
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            pagamentos: updatedPagamentos,
-        }));
-    };
-
     const handleInputChange = (e, fieldName) => {
         const { value, type } = e.target;
-        let updatedValue;
+        let updatedValue = value;
 
         if (type === 'radio') {
             updatedValue = e.target.id === 'radioSim';
-        } else {
-            updatedValue = value;
+        } else if (fieldName === 'valorDespachante' || fieldName === 'valorDETRAN') {
+            // Se os campos forem relacionados aos valores do serviço, atualize diretamente o valor
+            updatedValue = parseFloat(value || 0); // Garante que o valor seja um número
         }
 
         setFormData((prevFormData) => ({
@@ -141,6 +120,23 @@ function ManterOs() {
         }));
     };
 
+    const handlePagamentoChange = (formaDePagamentoSelecionada) => {
+        const valorServico = parseFloat(formData.servicoPrestado.valorDespachante || 0) + parseFloat(formData.servicoPrestado.valorDETRAN || 0);
+
+        const updatedPagamento = {
+            ...formData.pagamento,
+            valor: valorServico.toFixed(2),
+            formaDePagamento: formaDePagamentoSelecionada,
+        };
+
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            pagamento: updatedPagamento,
+        }));
+    };
+
+
+   
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -152,7 +148,7 @@ function ManterOs() {
             });
 
             console.log('Ordem de serviço registrada com sucesso:', response.data);
-            // Navigate to the desired page after successful submission
+            navigate('/os');
         } catch (error) {
             console.error('Erro ao enviar os dados:', error);
         }
@@ -281,22 +277,12 @@ function ManterOs() {
                             <Form.Control
                                 type="text"
                                 placeholder="Valor"
-                                value={formData.servicoPrestado.valorDespachante + formData.servicoPrestado.valorDETRAN || ''}
+                                value={(typeof formData.servicoPrestado.valorDespachante === 'number' && typeof formData.servicoPrestado.valorDETRAN === 'number')
+                                    ? (formData.servicoPrestado.valorDespachante + formData.servicoPrestado.valorDETRAN).toFixed(2)
+                                    : ''}
                                 onChange={(e) => {
-                                    setFormData(prevFormData => ({
-                                        ...prevFormData,
-                                        servicoPrestado: {
-                                            ...prevFormData.servicoPrestado,
-                                            valorDespachante: e.target.value
-                                        }
-                                    }));
-                                    setFormData(prevFormData => ({
-                                        ...prevFormData,
-                                        servicoPrestado: {
-                                            ...prevFormData.servicoPrestado,
-                                            valorDETRAN: e.target.value
-                                        }
-                                    }));
+                                    handleInputChange(e, 'valorDespachante');
+                                    handleInputChange(e, 'valorDETRAN');
                                 }}
 
                             />
@@ -395,14 +381,16 @@ function ManterOs() {
                     <Form.Select
                         type="text"
                         placeholder="Nome"
-                        value={formData.pagamentos[0].formaDePagamento ? formData.pagamentos[0].formaDePagamento.id : ''}
-                        onChange={(e) => handlePagamentoChange(formData.pagamentos[0].id, parseInt(e.target.value, 10))}
+                        onChange={(e) => {
+                            const selectedFormaDePagamento = e.target.value;
+                            handlePagamentoChange(selectedFormaDePagamento);
+                        }}
                     >
-                        {formasDePagamento.map((formaDePagamento) => (
-                            <option key={formaDePagamento.id} value={formaDePagamento.id}>
-                                {formaDePagamento.nome}
-                            </option>
-                        ))}
+                        <option>Selecione...</option>
+                        <option>Crédito</option>
+                        <option>Débito</option>
+                        <option>Dinheiro</option>
+                        <option>Pix</option>
                     </Form.Select>
                 </Form.Group>
 
@@ -420,7 +408,7 @@ function ManterOs() {
                     <IoSave />Salvar
                 </Button>
 
-                <Button variant="secondary" className="button-styles -cancel" type="button" href={'/'}>
+                <Button variant="secondary" className="button-styles -cancel" type="button" href={'/home'}>
                     <IoStopCircleSharp /> Cancelar
                 </Button>
 

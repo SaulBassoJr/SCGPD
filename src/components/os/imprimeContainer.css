@@ -1,0 +1,84 @@
+.imprimeContainer {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px; 
+}
+
+.divImprime{
+    display: flex;
+    background-color: #fff;
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    width: 700px;
+    border-radius: 0;
+    padding: 20px;
+}
+
+.divImprime h1{
+    font-size: 20px;
+    margin-bottom: 0;
+    color: #04060b;
+    font-weight: bold;
+    text-align: center;
+   
+}
+.divImprime h2{
+    font-size: 15px;
+    margin-bottom: 0;
+    color: #04060b;
+    text-align: center;
+   
+}
+
+.imprimirButton{
+    margin-top: 20px;
+    width: 100%;
+}
+
+.containerTable{
+    border: 2px solid #000;
+    display: flex;
+    flex-direction: column;
+}
+
+.divPar{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.divParAss{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 100px;
+    margin-top: 50px;
+}
+
+.divParAss2{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 160px 0 100px;
+}
+
+.lineP{
+    border: 2px solid #000;
+    width: 100%;
+}
+
+.spanSt{
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.mrgP{
+    margin-left: 5px;
+}
+.marg{
+    margin-top: 3px;
+}
