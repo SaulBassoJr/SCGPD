@@ -18,6 +18,7 @@ function DisplayPagamentos() {
     const [pagamentos, setPagamentos] = useState([]);
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [showAvisoAlert, setShowAvisoAlert] = useState(false);
 
     const [q, setQ] = useState("");
     const [searchParam] = useState(["formaDePagamento"]);
@@ -109,7 +110,14 @@ function DisplayPagamentos() {
                 setShowSuccessAlert(false);
             }, 2000);
         } catch (error) {
-            console.log(error);
+            if (error.response && error.response.data === "Pagamento possui Ordem de Serviço cadastrada") {
+                setShowAvisoAlert(true);
+                setTimeout(() => {
+                    setShowAvisoAlert(false);
+                }, 5000);
+            } else {
+                console.log(error);
+            }
         }
     };
 
@@ -194,6 +202,11 @@ function DisplayPagamentos() {
                 {showSuccessAlert && (
                     <Alert variant="success" onClose={() => setShowSuccessAlert(false)} dismissible>
                         Cliente excluído com sucesso!
+                    </Alert>
+                )}
+                {showAvisoAlert && (
+                    <Alert variant="warning" onClose={() => setShowAvisoAlert(false)} dismissible>
+                        Não é possível excluir este Pagamento, pois está vinculado a uma Ordem de Serviço.
                     </Alert>
                 )}
 

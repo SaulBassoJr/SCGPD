@@ -29,7 +29,8 @@ function DisplayClientes() {
     const getClientes = async () => {
         try {
             const response = await axios.get('https://localhost:7029/SCGPD/Cliente');
-            const data = response.data;
+                let data = response.data;
+                data.sort((a, b) => (a.nome.toLowerCase() > b.nome.toLowerCase()) ? 1 : -1);
             setClientes(data);
             setIsLoaded(true);
         } catch (error) {

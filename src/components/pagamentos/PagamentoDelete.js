@@ -1,10 +1,12 @@
 import React from "react";
 import '../layout/button-styles.css';
-import Button from 'react-bootstrap/Button';
+import { Modal, Button } from 'react-bootstrap';
 import { FaRegTrashAlt, FaRegEdit } from "react-icons/fa";
+import {useState} from "react";
 
-function PagamentoDelete({id, handleRemove}){
-  const remove =(e) =>{
+function PagamentoDelete({ id, handleRemove }) {
+  const [printData, setPrintData] = useState(null);
+  const remove = (e) => {
     e.preventDefault()
 
     const confirmed = window.confirm("Tem certeza que deseja excluir este pagamento?");
@@ -14,11 +16,14 @@ function PagamentoDelete({id, handleRemove}){
 
   }
 
-  return(
-        <div>
-          <Button variant="danger"  className="button-styles" onClick={remove}> <FaRegTrashAlt/> </Button>
-          <Button variant="primary" className="button-styles" href={`/servicos/novoservico/${id}`} ><FaRegEdit/></Button>
+  return (
+    <section>
+      <div>
+        <Button variant="danger" className="button-styles" onClick={remove}> <FaRegTrashAlt /> </Button>
+        <Button variant="primary" className="button-styles" href={`/pagamentos/novopagamento/${id}`} ><FaRegEdit /></Button>
       </div>
-    )
+  
+    </section>
+  )
 }
- export default PagamentoDelete
+export default PagamentoDelete
