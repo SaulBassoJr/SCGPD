@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Alert from 'react-bootstrap/Alert';
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 import { Modal, Button } from 'react-bootstrap';
 import ImprimeOs from './ImprimeOs'; // Seu componente ImprimeOs
@@ -12,8 +13,9 @@ import ImprimeOs from './ImprimeOs'; // Seu componente ImprimeOs
 import '../layout/button-styles.css';
 import '../layout/buscador-styles.css'
 import '../layout/sectionLayout.css';
+import '../layout/table.css';
 
-function DisplayOs({ os }) {
+function DisplayOs() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [oss, setOss] = useState([]);
@@ -25,6 +27,9 @@ function DisplayOs({ os }) {
     const [q, setQ] = useState("");
     const [searchParam] = useState(["cliente.nome", "veiculo.placa", "servicoPrestado.nome"]);
     const [filterParam, setFilterParam] = useState(["All"]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5);
 
     const getOss = async () => {
         try {
@@ -42,6 +47,112 @@ function DisplayOs({ os }) {
     }, []);
 
     const data = Object.values(oss);
+
+    // Lógica para paginar os dados
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = search(data).slice(indexOfFirstItem, indexOfLastItem);
+
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(search(data).length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
+
+    const renderTableRows = () => {
+        return currentItems.map((os) => (
+            <tr key={os.id}>
+                <td>{os.cliente ? os.cliente.nome : ''}</td>
+                <td className="text-end">
+                    {os.cliente ? os.cliente.cpf : ''}
+                </td>
+                <td className="text-end">
+                    {os.cliente ? os.cliente.telefone : ''}
+                </td>
+                <td className="text-end">
+                    {os.veiculo ? os.veiculo.placa : ''}
+                </td>
+                <td>
+                    {os.veiculo ? os.veiculo.modelo : ''}
+                </td>
+                <td>
+                    {os.servicoPrestado ? os.servicoPrestado.nome : ''}
+                </td>
+                <td className="text-end">
+                    R${os.servicoPrestado ? (os.servicoPrestado.valorDespachante + os.servicoPrestado.valorDETRAN).toFixed(2) : ''}
+                </td>
+                <td className="text-center">
+                    {os.dataCriacao !== undefined ? new Date(os.dataCriacao).toLocaleDateString('pt-BR') : ''}
+                </td>
+                <td className="text-end">
+                    {os.prazo !== undefined ? os.prazo : ''}
+                </td>
+
+                <td className="text-center">
+                    <OsDelete
+                        id={os.id}
+                        handleRemove={removeOs}
+                    />
+                </td>
+                <td className="text-center">
+                    <Button className="pdfButton" onClick={() => handleOpenModal(os)}>Visualizar OS</Button>
+                </td>
+            </tr>
+        ));
+    };
+
+    const handlePagination = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // Lógica para renderizar os botões de paginação
+    const renderPaginationButtons = () => {
+        const totalItems = search(data).length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        const pages = [];
+        const delta = 1; // Quantidade de botões antes e depois da página atual
+
+        let start = Math.max(1, currentPage - delta);
+        let end = Math.min(totalPages, currentPage + delta);
+
+        if (totalPages > 3) {
+            if (currentPage <= delta + 1) {
+                end = 2 * delta + 1;
+            } else if (currentPage >= totalPages - delta) {
+                start = totalPages - 2 * delta;
+            }
+        }
+
+        for (let i = start; i <= end; i++) {
+            pages.push(
+                <li className="list" key={i}>
+                    <Button className={`buttonList ${currentPage === i ? 'activePage' : ''}`} onClick={() => handlePagination(i)}>
+                        {i}
+                    </Button>
+                </li>
+            );
+        }
+
+        return (
+            <ul className="pagination-list">
+                {currentPage > 1 && (
+                    <li className="list">
+                        <Button className="buttonList" onClick={() => handlePagination(currentPage - 1)}>
+                            <FaAngleLeft />
+                        </Button>
+                    </li>
+                )}
+                {pages}
+                {currentPage < totalPages && (
+                    <li className="list">
+                        <Button className="buttonList" onClick={() => handlePagination(currentPage + 1)}>
+                            <FaAngleRight />
+                        </Button>
+                    </li>
+                )}
+            </ul>
+        );
+    };
 
     function search(oss) {
         return oss.filter((os) => {
@@ -86,16 +197,16 @@ function DisplayOs({ os }) {
         }
     };
 
-        const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
-        const handleOpenModal = (selectedOs) => {
-            setPrintData(selectedOs);
-            setShowModal(true);
-        };
+    const handleOpenModal = (selectedOs) => {
+        setPrintData(selectedOs);
+        setShowModal(true);
+    };
 
-        const handleCloseModal = () => {
-            setShowModal(false);
-        };
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
 
 
 
@@ -128,13 +239,13 @@ function DisplayOs({ os }) {
                 )}
 
                 <Table responsive bordered size="sm" >
-                    <thead >
+                    <thead className="table">
                         <tr>
                             <th className="text-center">Proprietario</th>
                             <th className="text-center">CPF</th>
                             <th className="text-center">N° Celular</th>
-                            <th className="text-center">Placa do Veiculo</th>
-                            <th className="text-center">Modelo do Veiculo</th>
+                            <th className="text-center">Placa</th>
+                            <th className="text-center">Modelo</th>
                             <th className="text-center">Serviço Prestado</th>
                             <th className="text-center">Valor Serviço</th>
                             <th className="text-center">Data</th>
@@ -144,51 +255,14 @@ function DisplayOs({ os }) {
                         </tr>
                     </thead>
                     <tbody >
-                        {search(data)?.map((os) =>
-                            <tr key={os.id} >
-                                <td>
-                                    {os.cliente ? os.cliente.nome : ''}
-                                </td>
-                                <td className="text-end">
-                                    {os.cliente ? os.cliente.cpf : ''}
-                                </td>
-                                <td className="text-end">
-                                    {os.cliente ? os.cliente.telefone : ''}
-                                </td>
-                                <td className="text-end">
-                                    {os.veiculo ? os.veiculo.placa : ''}
-                                </td>
-                                <td>
-                                    {os.veiculo ? os.veiculo.modelo : ''}
-                                </td>
-                                <td>
-                                    {os.servicoPrestado ? os.servicoPrestado.nome : ''}
-                                </td>
-                                <td className="text-end">
-                                    R${os.servicoPrestado ? (os.servicoPrestado.valorDespachante + os.servicoPrestado.valorDETRAN).toFixed(2) : ''}
-                                </td>
-                                <td className="text-center">
-                                    {os.dataCriacao !== undefined ? new Date(os.dataCriacao).toLocaleDateString('pt-BR') : ''}
-                                </td>
-                                <td className="text-end">
-                                    {os.prazo !== undefined ? os.prazo : ''}
-                                </td>
-
-                                <td className="text-center">
-                                    <OsDelete
-                                        id={os.id}
-                                        handleRemove={removeOs}
-                                    //handleImprime={() => handleImprime(os)}
-                                    />
-                                </td>
-                                <td className="text-center">
-                                    <Button className="pdfButton" onClick={() => handleOpenModal(os)}>Visualizar OS</Button>
-                                </td>
-                            </tr>
-                        )}
+                        {renderTableRows()}
                     </tbody>
 
                 </Table>
+
+                <div className="paginat">
+                    {renderPaginationButtons()}
+                </div>
                 <div>
                     <Modal show={showModal} onHide={handleCloseModal} size="lg">
                         <Modal.Header closeButton>
@@ -198,7 +272,7 @@ function DisplayOs({ os }) {
                             <ImprimeOs os={printData} />
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button  onClick={handleCloseModal}>Fechar</Button>
+                            <Button onClick={handleCloseModal}>Fechar</Button>
                         </Modal.Footer>
                     </Modal>
                 </div>

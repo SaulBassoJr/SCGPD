@@ -19,7 +19,7 @@ function Navbarr(){
                         <NavDropdown.Item href ='/veiculos/novoveiculo'><FaTruck/> Cadastrar Veiculos</NavDropdown.Item>
                         <NavDropdown.Item href ='/servicos/novoservico'><FaTools/> Cadastrar Serviço</NavDropdown.Item>
                         <NavDropdown.Item href ='/os/novaOs'><FaFileAlt/> Registrar Os's</NavDropdown.Item>
-                        <NavDropdown.Item href ='/usuarios/novousuario'><FaUserFriends/> Cadastrar Usuários</NavDropdown.Item>
+                        {/* <NavDropdown.Item href ='/usuarios/novousuario'><FaUserFriends/> Cadastrar Usuários</NavDropdown.Item> */}
                     </NavDropdown>
 
                     <Nav.Link href='/home'><FaHome/> Home</Nav.Link>
@@ -29,7 +29,7 @@ function Navbarr(){
                     <Nav.Link href ='/servicos'><FaTools/> Serviços</Nav.Link>
                     <Nav.Link href ='/os'><FaFileAlt/> OS's</Nav.Link>
                     <Nav.Link href ='/pagamentos'><FaDollarSign/> Pagamentos</Nav.Link>
-                    <Nav.Link href =''><FaUserFriends/> Usuários</Nav.Link>
+                    {/* <Nav.Link href =''><FaUserFriends/> Usuários</Nav.Link> */}
 
                             
                 </Nav>

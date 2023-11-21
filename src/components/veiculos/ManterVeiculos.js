@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import '../layout/sectionLayout.css';
 import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
@@ -12,6 +13,11 @@ import axios from "axios";
 function ManterVeiculos() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({});
+
+    const [showExistPlAlert, setShowExistPlAlert] = useState(false);
+    // const [showInvalidPlAlert, setShowInvalidPlAlert] = useState(false);
+    const [showInvalidRnAlert, setShowInvalidRnAlert] = useState(false);
+    const [showExistRnAlert, setShowExistRnAlert] = useState(false);
 
     const handleInputChange = (e, fieldName) => {
         const { value, type } = e.target;
@@ -41,7 +47,25 @@ function ManterVeiculos() {
             const data = response.data;
             navigate('/veiculos');
         } catch (error) {
-            console.error('Erro ao enviar os dados:', error);
+            if (error.response && error.response.data === "A Placa de veículo " + formData.placa + " já está cadastrada") {
+                setShowExistPlAlert(true);
+                setTimeout(() => {
+                    setShowExistPlAlert(false);
+                }, 5000);
+            }
+            if (error.response && error.response.data === "O Renvam " + formData.renavam + " é inválido") {
+                setShowInvalidRnAlert(true);
+                setTimeout(() => {
+                    setShowInvalidRnAlert(false);
+                }, 5000);
+            } else if (error.response && error.response.data === "O Renavam" + formData.renavam + " já está cadastrado") {
+                setShowExistRnAlert(true);
+                setTimeout(() => {
+                    setShowExistRnAlert(false);
+                }, 5000);
+            } else {
+                console.log(error);
+            }
         }
 
     };
@@ -63,7 +87,22 @@ function ManterVeiculos() {
     return (
         <section className='main_section'>
             <h1>Cadastrar Veículo</h1>
-            <Form onSubmit={handleSubmit}>
+            {showExistPlAlert && (
+                <Alert variant="warning" onClose={() => setShowExistPlAlert(false)} dismissible>
+                    A Placa " {formData.placa} " já está cadastrada no sistema.
+                </Alert>
+            )}
+            {showInvalidRnAlert && (
+                <Alert variant="warning" onClose={() => setShowInvalidRnAlert(false)} dismissible>
+                    O Renavam " {formData.renavam} "  é inválido.
+                </Alert>
+            )}
+            {showExistRnAlert && (
+                <Alert variant="warning" onClose={() => setShowExistRnAlert(false)} dismissible>
+                    O Renavam " {formData.renavam} "  já está cadastrado no sistema.
+                </Alert>
+            )}
+            <Form className="diveditPag"  onSubmit={handleSubmit}>
                 <Form.Group className="variantpar" controlId="formBasicEmail">
                     <div className="inputpar">
                         <div className='space'>
@@ -183,7 +222,7 @@ function ManterVeiculos() {
 
                     </div>
                 </Form.Group>
-
+                <div className='inputpar'>                   
                 <Button variant="secondary" type="submit">
                     <IoSave />Salvar
                 </Button>
@@ -191,6 +230,7 @@ function ManterVeiculos() {
                 <Button variant="secondary" className="button-styles -cancel" type="button" href={'/home'}>
                     <IoStopCircleSharp /> Cancelar
                 </Button>
+                </div>
             </Form>
         </section>
     )

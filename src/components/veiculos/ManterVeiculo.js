@@ -1,5 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import '../layout/sectionLayout.css';
 import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
@@ -9,9 +10,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function ManterVeiculo() {
-    const {id} = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ });
+    const [formData, setFormData] = useState({});
+
+    const [showInvalidRnAlert, setShowInvalidRnAlert] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,7 +28,7 @@ function ManterVeiculo() {
         };
         fetchData();
     }, [id]);
-    
+
 
     const handleInputChange = (e, fieldName) => {
         const { value, type } = e.target;
@@ -56,28 +59,40 @@ function ManterVeiculo() {
             const data = response.data;
             navigate('/veiculos');
         } catch (error) {
-            console.error('Erro ao enviar os dados:', error);
+            if (error.response && error.response.data === "O Renvam " + formData.renavam + " é inválido") {
+                setShowInvalidRnAlert(true);
+                setTimeout(() => {
+                    setShowInvalidRnAlert(false);
+                }, 5000);
+            } else {
+                console.error('Erro ao enviar os dados:', error);
+            }
         }
 
     };
 
     function renderHelpIcon(text) {
         return (
-          <OverlayTrigger
-            placement="top"
-            delay={{ show: 150, hide: 400 }}
-            overlay={
-                <Popover id="popover-basic" className='help-text'>{text}</Popover>
-            }
-          >
-            <span className="help-icon">?</span>
-          </OverlayTrigger>
+            <OverlayTrigger
+                placement="top"
+                delay={{ show: 150, hide: 400 }}
+                overlay={
+                    <Popover id="popover-basic" className='help-text'>{text}</Popover>
+                }
+            >
+                <span className="help-icon">?</span>
+            </OverlayTrigger>
         );
-      }
+    }
 
     return (
         <section className='main_section -bgheight'>
             <h1>Editar Veículo</h1>
+            {showInvalidRnAlert && (
+                <Alert variant="warning" onClose={() => setShowInvalidRnAlert(false)} dismissible>
+                    O Renavam " {formData.renavam} "  é inválido.
+                </Alert>
+            )}
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="variantpar" controlId="formBasicEmail">
                     <div className="inputpar">

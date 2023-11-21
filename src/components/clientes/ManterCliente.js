@@ -1,5 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import '../layout/sectionLayout.css';
 import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
@@ -12,6 +13,9 @@ function ManterCliente() {
     const {id} = useParams();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ });
+
+    const [showInvalidCpfAlert, setShowInvalidCpfAlert] = useState(false);
+    const [showInvalidRgAlert, setShowInvalidRgAlert] = useState(false);
 
     const [uf, setUf] = useState([]);
     const [listUf, setListUf] = useState([]);
@@ -81,7 +85,20 @@ function ManterCliente() {
             const data = response.data;
             navigate('/clientes');
         } catch (error) {
-            console.error('Erro ao enviar os dados:', error);
+            if (error.response && error.response.data === "O CPF " + formData.cpf + " é inválido") {
+                setShowInvalidCpfAlert(true);
+                setTimeout(() => {
+                    setShowInvalidCpfAlert(false);
+                }, 5000);
+            } 
+            if (error.response && error.response.data === "O RG " + formData.rg + " é inválido") {
+                setShowInvalidRgAlert(true);
+                setTimeout(() => {
+                    setShowInvalidRgAlert(false);
+                }, 5000);
+            } else {
+                console.log(error);
+            }
         }
 
     };
@@ -105,6 +122,16 @@ function ManterCliente() {
     return (
         <section className='main_section -bgheight'>
             <h1>Editar Cliente</h1>
+            {showInvalidCpfAlert && (
+                <Alert variant="warning" onClose={() => setShowInvalidCpfAlert(false)} dismissible>
+                    O CPF " {formData.cpf} "  é inválido.
+                </Alert>
+            )}
+            {showInvalidRgAlert && (
+                <Alert variant="warning" onClose={() => setShowInvalidRgAlert(false)} dismissible>
+                    O RG " {formData.rg} "  é inválido.
+                </Alert>
+            )}
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formNome">
                     <Form.Label>*Nome</Form.Label>

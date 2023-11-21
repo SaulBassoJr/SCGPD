@@ -25,6 +25,7 @@ import ImprimeOs from './components/os/ImprimeOs';
 import { useLocation, useNavigate  } from 'react-router-dom';
 import { AuthProvider } from './components/hooks/useAuth';
 import EditPagamento from './components/pagamentos/EditPagamento';
+import EditarOs from './components/os/EditarOs';
 
 function NavbarConditional() {
   const location = useLocation();
@@ -56,6 +57,7 @@ function App() {
           <Route path='/clientes/novocliente' element={isUserAuthenticated ? <ManterClientes /> : <Navigate to="/login" />}/>
           <Route path='/os' element={isUserAuthenticated ? <DisplayOs /> : <Navigate to="/login" />}/>
           <Route path='/os/novaOs' element={isUserAuthenticated ? <ManterOs /> : <Navigate to="/login" />}/>
+          <Route path='/os/novaOs/:id' element={isUserAuthenticated ? <EditarOs /> : <Navigate to="/login" />}/>
           <Route path='/servicos'  element={isUserAuthenticated ? <DisplayServicos /> : <Navigate to="/" />}/>
           <Route path='/servicos/novoservico/:id' element={isUserAuthenticated ? <ManterServico /> : <Navigate to="/login" />}/>
           <Route path='/servicos/novoservico' element={isUserAuthenticated ? <ManterServicos /> : <Navigate to="/login" />}/>
@@ -65,7 +67,6 @@ function App() {
           <Route path='/usuarios/novousuario' element={isUserAuthenticated ? <ManterUsuarios /> : <Navigate to="/login" />}/>
           <Route path='/pagamentos' element={isUserAuthenticated ? <DisplayPagamentos /> : <Navigate to="/login" />}/>
           <Route path='/pagamentos/novopagamento/:id' element={isUserAuthenticated ? <EditPagamento /> : <Navigate to="/login" />}/>
-          <Route path='/OsNova' element={isUserAuthenticated ? <ImprimeOs /> : <Navigate to="/login" />}/>
           {/* <Route exact path='/usuarios' element={<UsuariosListagem/>}/>
           <Route exact path='/usuarios/novousuario' element={<UsuariosCadastro/>}/>
           <Route exact path='/os' element={<OsListagem/>}/>

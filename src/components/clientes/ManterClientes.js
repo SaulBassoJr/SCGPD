@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import '../layout/sectionLayout.css';
 import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
@@ -12,6 +13,11 @@ import axios from "axios";
 function ManterClientes() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({});
+
+    const [showExistAlert, setShowExistAlert] = useState(false);
+    const [showInvalidCpfAlert, setShowInvalidCpfAlert] = useState(false);
+    const [showInvalidRgAlert, setShowInvalidRgAlert] = useState(false);
+    const [showExistRgAlert, setShowExistRgAlert] = useState(false);
 
     const [uf, setUf] = useState([]);
     const [listUf, setListUf] = useState([]);
@@ -68,30 +74,73 @@ function ManterClientes() {
             const data = response.data;
             navigate('/clientes');
         } catch (error) {
-            console.error('Erro ao enviar os dados:', error);
+            if (error.response && error.response.data === "O CPF " + formData.cpf + " já está cadastrado no sistema") {
+                setShowExistAlert(true);
+                setTimeout(() => {
+                    setShowExistAlert(false);
+                }, 5000);
+            } else if (error.response && error.response.data === "O CPF " + formData.cpf + " é inválido") {
+                setShowInvalidCpfAlert(true);
+                setTimeout(() => {
+                    setShowInvalidCpfAlert(false);
+                }, 5000);
+            } 
+            if (error.response && error.response.data === "O RG " + formData.rg + " é inválido") {
+                setShowInvalidRgAlert(true);
+                setTimeout(() => {
+                    setShowInvalidRgAlert(false);
+                }, 5000);
+            } else if (error.response && error.response.data === "O RG " + formData.rg + " já está cadastrado no sistema") {
+                setShowExistRgAlert(true);
+                setTimeout(() => {
+                    setShowExistRgAlert(false);
+                }, 5000);
+            } else {
+                console.log(error);
+            }
         }
 
     };
 
     function renderHelpIcon(text) {
         return (
-          <OverlayTrigger
-            placement="top"
-            delay={{ show: 150, hide: 400 }}
-            overlay={
-                <Popover id="popover-basic" className='help-text'>{text}</Popover>
-            }
-          >
-            <span className="help-icon">?</span>
-          </OverlayTrigger>
+            <OverlayTrigger
+                placement="top"
+                delay={{ show: 150, hide: 400 }}
+                overlay={
+                    <Popover id="popover-basic" className='help-text'>{text}</Popover>
+                }
+            >
+                <span className="help-icon">?</span>
+            </OverlayTrigger>
         );
-      }
+    }
 
 
 
     return (
         <section className='main_section -bgheight'>
             <h1>Cadastrar Cliente</h1>
+            {showExistAlert && (
+                <Alert variant="warning" onClose={() => setShowExistAlert(false)} dismissible>
+                    O CPF " {formData.cpf} " já está cadastrado no sistema.
+                </Alert>
+            )}
+             {showInvalidCpfAlert && (
+                <Alert variant="warning" onClose={() => setShowInvalidCpfAlert(false)} dismissible>
+                    O CPF " {formData.cpf} "  é inválido.
+                </Alert>
+            )}
+            {showInvalidRgAlert && (
+                <Alert variant="warning" onClose={() => setShowInvalidRgAlert(false)} dismissible>
+                    O RG " {formData.rg} "  é inválido.
+                </Alert>
+            )}
+            {showExistRgAlert && (
+                <Alert variant="warning" onClose={() => setShowExistRgAlert(false)} dismissible>
+                    O RG " {formData.rg} "  já está cadastrado no sistema.
+                </Alert>
+            )}
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formNome">
                     <Form.Label>*Nome </Form.Label>
@@ -162,9 +211,9 @@ function ManterClientes() {
                         </div>
                         <div>
                             <Form.Label>*Gênero</Form.Label>
-                            <Form.Select type='checkbox' 
-                            value={formData.genero}
-                            onChange={(e) => handleInputChange(e, 'genero')}   
+                            <Form.Select type='checkbox'
+                                value={formData.genero}
+                                onChange={(e) => handleInputChange(e, 'genero')}
                             >
                                 <option>Selecione...</option>
                                 <option>M</option>
@@ -199,7 +248,7 @@ function ManterClientes() {
                             <Form.Select
                                 type='checkbox'
                                 value={formData.uf}
-                                onChange={(e) => {setUf(e.target.value); handleInputChange(e, 'uf') }}
+                                onChange={(e) => { setUf(e.target.value); handleInputChange(e, 'uf') }}
                                 name="uf_id"
                             >
                                 <option>Selecione...</option>
@@ -214,7 +263,7 @@ function ManterClientes() {
                                 type='checkbox'
                                 placeholder="Cidade"
                                 value={formData.cidade}
-                                onChange={(e) => {setCity(e.target.value); handleInputChange(e, 'cidade') }}
+                                onChange={(e) => { setCity(e.target.value); handleInputChange(e, 'cidade') }}
                                 name="city_id"
                             >
                                 <option>Selecione...</option>
@@ -230,11 +279,11 @@ function ManterClientes() {
                     <div className="inputpar">
                         <div className='space'>
                             <Form.Label>*Bairro</Form.Label>
-                            <Form.Control 
-                            type="text" 
-                            placeholder="Bairro"
-                            value={formData.bairro} 
-                            onChange={(e) => handleInputChange(e, 'bairro')}
+                            <Form.Control
+                                type="text"
+                                placeholder="Bairro"
+                                value={formData.bairro}
+                                onChange={(e) => handleInputChange(e, 'bairro')}
                             />
                         </div>
                         <div className='space'>
@@ -252,7 +301,7 @@ function ManterClientes() {
                                 type="text"
                                 placeholder="Numero"
                                 value={formData.numero}
-                                onChange={(e) => handleInputChange(e, 'numero')} 
+                                onChange={(e) => handleInputChange(e, 'numero')}
                             />
                         </div>
                     </div>

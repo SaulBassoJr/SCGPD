@@ -1,40 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Button, OverlayTrigger, Popover } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import '../layout/sectionLayout.css';
 import { IoStopCircleSharp, IoSave } from 'react-icons/io5';
-import axios from 'axios';
-import InputMask from 'react-input-mask';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-function ManterOs() {
+function EditarOs() {
+    const { id } = useParams();
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        cliente: {
-            id: null,
-            nome: '',
-            cpf: '',
-            telefone: '',
-        },
-        veiculo: {
-            placa: '',
-            modelo: '',
-        },
-        servicoPrestado: {
-            valorDespachante: 0,
-            valorDETRAN: 0,
-        },
-        pagamento: {
-            id: 0, // Change this to the appropriate payment ID
-            formaDePagamento: "",
-            valor: 0,
-        },
-        dataCriacao: '',
-        prazo: '',
-        valorVeiculo: null,
-        dataVenda: null,
-        dataVencimento: null,
-        conversaoMercosul: false,
-        observacoes: '',
-    });
+    const [formData, setFormData] = useState({});
 
     const [clientes, setClientes] = useState([]);
     const [veiculos, setVeiculos] = useState([]);
@@ -42,10 +17,10 @@ function ManterOs() {
     const [Pagamentos, setPagamentos] = useState([]);
 
     useEffect(() => {
-        // Fetch data on component mount
         const fetchData = async () => {
             try {
-                const [clientesRes, veiculosRes, servicosRes, PagamentosRes] = await Promise.all([
+                const [response, clientesRes, veiculosRes, servicosRes, PagamentosRes] = await Promise.all([
+                    axios.get(`https://localhost:7029/SCGPD/OrdemDeServico/ID_${id}`),
                     axios.get('https://localhost:7029/SCGPD/Cliente'),
                     axios.get('https://localhost:7029/SCGPD/Veiculo'),
                     axios.get('https://localhost:7029/SCGPD/ServicoPrestado'),
@@ -56,13 +31,14 @@ function ManterOs() {
                 setVeiculos(veiculosRes.data);
                 setServicosPrestados(servicosRes.data);
                 setPagamentos(PagamentosRes.data);
+                const { data } = response;
+                setFormData(data);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Erro ao obter os dados existentes:', error);
             }
         };
-
         fetchData();
-    }, []);
+    }, [id]);
 
     const handleClientChange = (clientId) => {
         const selectedClient = clientes.find((cliente) => cliente.id === clientId);
@@ -137,12 +113,12 @@ function ManterOs() {
     };
 
 
-   
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('https://localhost:7029/SCGPD/OrdemDeServico', formData, {
+            const response = await axios.put(`https://localhost:7029/SCGPD/OrdemDeServico/${id}`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -154,21 +130,6 @@ function ManterOs() {
             console.error('Erro ao enviar os dados:', error);
         }
     };
-
-    function renderHelpIcon(text) {
-        return (
-            <OverlayTrigger
-                placement="top"
-                delay={{ show: 150, hide: 400 }}
-                overlay={
-                    <Popover id="popover-basic" className='help-text'>{text}</Popover>
-                }
-            >
-                <span className="help-icon">?</span>
-            </OverlayTrigger>
-        );
-    }
-
 
     return (
         <section className='main_section -bgheight'>
@@ -234,8 +195,9 @@ function ManterOs() {
                     <div className="inputpar">
                         <div className='space'>
                             <Form.Label>*Placa</Form.Label>
-                            <InputMask
-                                mask="aaa-9*99"
+                            <Form.Control
+                                type="text"
+                                placeholder="Placa"
                                 value={formData.veiculo.placa}
                                 onChange={(e) => {
                                     setFormData(prevFormData => ({
@@ -247,15 +209,7 @@ function ManterOs() {
                                     }));
                                     handlePlateChange(e.target.value);
                                 }}
-                            >
-                                {(inputProps) => (
-                                    <Form.Control
-                                        {...inputProps}
-                                        type="text"
-                                        placeholder="Placa"
-                                    />
-                                )}
-                            </InputMask>
+                            />
                         </div>
 
                         <div>
@@ -296,7 +250,7 @@ function ManterOs() {
                 <Form.Group className="variantpar" controlId="formBasicEmail">
                     <div className="inputpar">
                         <div className='space'>
-                            <Form.Label>*Valor Serviço(s) {renderHelpIcon('Valor total do serviço, Valor DETRAN + Valor Despachante')}</Form.Label>
+                            <Form.Label>*Valor Serviço(s)</Form.Label>
                             <Form.Control
                                 type="text"
                                 placeholder="Valor"
@@ -312,7 +266,7 @@ function ManterOs() {
                         </div>
 
                         <div className='space'>
-                            <Form.Label>*Data {renderHelpIcon('Data em que a os foi criada.')}</Form.Label>
+                            <Form.Label>*Data</Form.Label>
                             <Form.Control
                                 type="date"
                                 value={formData.dataCriacao}
@@ -321,7 +275,7 @@ function ManterOs() {
                         </div>
 
                         <div>
-                            <Form.Label>*Prazo {renderHelpIcon('Quantidade de dias para realização do serviço.')}</Form.Label>
+                            <Form.Label>*Prazo</Form.Label>
                             <Form.Control
                                 type="number"
                                 placeholder="Dias"
@@ -335,7 +289,7 @@ function ManterOs() {
                 <Form.Group className="variantpar" controlId="formBasicEmail">
                     <div className="inputpar">
                         <div className="space">
-                            <Form.Label>Valor Veiculo {renderHelpIcon('Valor pelo qual veiculo foi vendido')}</Form.Label>
+                            <Form.Label>Valor Veiculo</Form.Label>
                             <Form.Control
                                 type="text"
                                 placeholder="Valor"
@@ -350,7 +304,7 @@ function ManterOs() {
                                 type="date"
                                 value={formData.dataVenda}
                                 onChange={(e) => handleInputChange(e, 'dataVenda')}
-                                dateFormat="dd/MM/yyyy" 
+                                dateFormat="dd/MM/yyyy"
                             />
                         </div>
 
@@ -360,7 +314,7 @@ function ManterOs() {
                                 type="date"
                                 value={formData.dataVencimento}
                                 onChange={(e) => handleInputChange(e, 'dataVencimento')}
-                                dateFormat="dd/MM/yyyy" 
+                                dateFormat="dd/MM/yyyy"
                             />
                         </div>
                     </div>
@@ -375,7 +329,7 @@ function ManterOs() {
                     <div>
 
                         <div className='space'>
-                            <Form.Label>*Conversão MercoSul {renderHelpIcon('Marque sim se estiver convertendo o numero da placa para MercoSul')}</Form.Label>
+                            <Form.Label>*Conversão MercoSul</Form.Label>
                             <div>
                                 <Form.Check
                                     type="radio"
@@ -439,7 +393,7 @@ function ManterOs() {
 
             </Form>
         </section>
-    );
+    )
 }
 
-export default ManterOs;
+export default EditarOs;

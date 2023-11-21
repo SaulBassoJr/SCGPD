@@ -82,7 +82,7 @@ function EditPagamento() {
                     <div >
 
                         <div className='space'>
-                            <Form.Label>*Status do Pagamento {renderHelpIcon('Marque "sim" caso exista algum débito do veículo como: Multas, documentação, impostos ou parcelas atrasadas')}</Form.Label>
+                            <Form.Label>*Status do Pagamento {renderHelpIcon('Status do pagamento indica se o pagamento foi efetuado ou não pelo cliente.')}</Form.Label>
                             <div>
                                 <Form.Check
                                     type="radio"
@@ -110,13 +110,15 @@ function EditPagamento() {
                     </div>
                 </Form.Group>
 
-                <Button variant="secondary" type="submit">
-                    <IoSave />Salvar
-                </Button>
+                <div className='inputpar'>
+                    <Button variant="secondary" type="submit">
+                        <IoSave />Salvar
+                    </Button>
 
-                <Button variant="secondary" className="button-styles -cancel" type='button' href={'/pagamentos'}>
-                    <IoStopCircleSharp /> Cancelar
-                </Button>
+                    <Button variant="secondary" className="button-styles -cancel" type="button" href={'/home'}>
+                        <IoStopCircleSharp /> Cancelar
+                    </Button>
+                </div>
             </Form>
         </section>
     )
